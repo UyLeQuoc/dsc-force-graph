@@ -1,4 +1,4 @@
-import { GraphData } from "react-force-graph-2d";
+import { GraphData } from "react-force-graph-3d";
 
 export const gData: GraphData & any = {
   nodes: [

@@ -1,12 +1,11 @@
-import { useCallback, useRef, useState } from "react";
-import ForceGraph3D, { ForceGraphMethods } from "react-force-graph-3d";
-import { Drawer, message, Modal, Space } from "antd";
-import { GraphData, NodeObject } from "react-force-graph-2d";
+import { Drawer, message, Space } from "antd";
+import { useEffect, useRef, useState } from "react";
+import ForceGraph3D, { ForceGraphMethods, GraphData } from "react-force-graph-3d";
 
-import {gData} from "../datasets/data";
-import AsideOptions from "./AsideOptions";
-import GraphOptions from "./GraphOptions";
+import { doc, getDoc } from "firebase/firestore";
 import { ILink } from "../interfaces";
+import { db } from "../utils/firebase";
+import AsideOptions from "./AsideOptions";
 
 type INode = {
 	id: string;
@@ -31,13 +30,12 @@ type IProps = {
 	addNode: any;
 }
 
-export default function BasicNodeChart({optionsModal} : any) {
+export default function BasicNodeChart({optionsModal, loggedInUser} : any) {
 	// Node Data State
 	const [nodeID, setNodeID] = useState('');
   const [nodeName, setNodeName] = useState('');
 	const [nodeGroup, setNodeGroup] = useState('');
   const [nodeValue, setNodeValue] = useState(0);
-
   const [action, setAction] = useState(false);
 
 	const [isNodeRemoving, setIsNodeRemoving] = useState(false);
@@ -46,7 +44,6 @@ export default function BasicNodeChart({optionsModal} : any) {
 	const [nodeToLink, setNodeToLink] = useState(null);
 	// const [linkName, setLinkName] = useState('');
 	// const [linkColor, setLinkColor] = useState('#888888');
-
 
 	// Graph Options State
 	const [enableFocusOnNode, setEnableFocusOnNode] = useState(true);
@@ -95,9 +92,7 @@ export default function BasicNodeChart({optionsModal} : any) {
 	]}
 	);
 
-
-
-	console.log('graph-data', graphData);
+	
 
   const addNode = () => {
 		const node = {
@@ -216,6 +211,31 @@ export default function BasicNodeChart({optionsModal} : any) {
 			setIsLinking(true);
 		}
 	}
+
+
+	// firebase
+	const [graphFirebase,setGraphFirebase] = useState<any>();
+	const [loading,setLoading] = useState<boolean>(true);
+	console.log('graphFirebase',graphFirebase);
+
+	const getUserFromFirebase = async () => {
+		const userRef = doc(db,'users', loggedInUser.uid);
+		const userSnap = await getDoc(userRef);
+		if (userSnap.exists()) {
+			console.log('User data: ', userSnap.data());
+			setGraphFirebase(userSnap.data());
+			setGraphData(userSnap.data().graph || {nodes:[],links:[]});
+		}
+		return;
+ 	};
+ 
+	useEffect( () => {
+			getUserFromFirebase();
+			// reset loading
+			setTimeout(() => {
+				setLoading(false);
+			},2000)
+	},[]);
 
   return (
 		<>

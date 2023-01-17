@@ -218,7 +218,7 @@ export default function BasicNodeChart({optionsModal} : any) {
 	}
 
   return (
-		<div className="">
+		<>
 			<AsideOptions
 				optionsModal = {optionsModal}
 				graphData={{
@@ -269,12 +269,12 @@ export default function BasicNodeChart({optionsModal} : any) {
 						open={open}
 					>
 						<Space direction="vertical">
-							<p>ID: {modalNode.id}</p>
-							<p>Group: {modalNode.group}</p>
-							<p>Color: {modalNode.color}</p>
-							<p>Index: {modalNode.index}</p>
-							<p>x: {modalNode.x}, y: {modalNode.y}. z: {modalNode.z}</p>
-							<p>vx: {modalNode.vx}, vy: {modalNode.vy}. vz: {modalNode.vz}</p>
+							<div>ID: {modalNode.id}</div>
+							<div>Group: {modalNode.group}</div>
+							<div>Color: {modalNode.color}</div>
+							<div>Index: {modalNode.index}</div>
+							<div>x: {modalNode.x}, y: {modalNode.y}. z: {modalNode.z}</div>
+							<div>vx: {modalNode.vx}, vy: {modalNode.vy}. vz: {modalNode.vz}</div>
 							<button onClick={() => {
 								removeNode(modalNode);
 								onClose();
@@ -284,6 +284,6 @@ export default function BasicNodeChart({optionsModal} : any) {
 					</Drawer>
 				)
 			}
-		</div>
+		</>
   );
 }

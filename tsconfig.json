@@ -23,7 +23,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-, "pages/about.jsx", "components/BasicNodeChart.jsx", "pages/index.tsx"  ],
+, "pages/about.jsx", "components/BasicNodeChart.jsx", "pages/index.tsx", "components/Editor/index.jsx", "components/Editor/MenuBar.jsx", "components/Editor/MenuItem.jsx"  ],
   "exclude": [
     "node_modules"
   ]

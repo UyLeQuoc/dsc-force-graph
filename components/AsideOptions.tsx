@@ -33,6 +33,7 @@ type IProps = {
     isNodeRemoving: boolean; setIsNodeRemoving: Dispatch<SetStateAction<boolean>>;
     isLinking: boolean; setIsLinking: Dispatch<SetStateAction<boolean>>;
     activeLinking: () => void;
+    updateGraph: () => void;
   };
   optionsModal: {
     open: boolean;
@@ -45,7 +46,7 @@ const AsideOptions = ({graphOptions, graphData, dataOptions, optionsModal}: IPro
   // Node Data State
   const {nodeID, setNodeID, nodeName, setNodeName, nodeGroup, setNodeGroup, nodeValue, setNodeValue} = graphData;
   // Data Options State
-  const {addNode, removeNode, isLinkRemoving, setIsLinkRemoving, isNodeRemoving, setIsNodeRemoving, activeLinking} = dataOptions;
+  const {addNode, removeNode, isLinkRemoving, setIsLinkRemoving, isNodeRemoving, setIsNodeRemoving, activeLinking, updateGraph} = dataOptions;
   const {open, onClose} = optionsModal;
 
 
@@ -75,6 +76,7 @@ const AsideOptions = ({graphOptions, graphData, dataOptions, optionsModal}: IPro
           <Button onClick={() => {activeLinking()}}>Insert links</Button>
           <Button onClick={() => {setIsNodeRemoving(!isNodeRemoving)}}>Set Mode Remove Node</Button>
 					<Button onClick={() => {setIsLinkRemoving(!isLinkRemoving)}}>Set Mode Remove links</Button>
+          <Button onClick={() => {updateGraph()}}>Update Graph</Button> 
         </Space>
 
         

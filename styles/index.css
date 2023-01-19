@@ -65,7 +65,7 @@
   margin: 1rem 0;
 }
 .ProseMirror blockquote {
-  border-left: 2px solid rgba(13, 13, 13, 0.1);
+  border-left: 2px solid rgba(13, 13, 13, 0.2);
   padding-left: 1rem;
 }
 .ProseMirror hr {

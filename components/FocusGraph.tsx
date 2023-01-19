@@ -1,8 +1,7 @@
 import { Drawer, message, Space } from "antd";
 import { useEffect, useRef, useState } from "react";
 import ForceGraph3D, { ForceGraphMethods, GraphData } from "react-force-graph-3d";
-
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { ILink } from "../interfaces";
 import { db } from "../utils/firebase";
 import AsideOptions from "./AsideOptions";
@@ -52,47 +51,7 @@ export default function BasicNodeChart({optionsModal, loggedInUser} : any) {
 	const [enableShowLinks, setEnableShowLinks] = useState(true);
 	const [enableShowDirected, setEnableShowDirected] = useState(true);
 
-  const [graphData, setGraphData] = useState(
-		{ 
-			nodes: [
-			{
-				"id": "Myriel",
-				"group": 1
-			},
-			{
-					"id": "Napoleon",
-					"group": 1
-			},
-			{
-					"id": "Mlle.Baptistine",
-					"group": 2
-			},
-			{
-				"id": "Mireel",
-				"group": 3
-		},
-		], 
-		links: [
-		{
-				"source": "Napoleon",
-				"target": "Myriel"
-		},
-		{
-				"source": "Myriel",
-				"target": "Mlle.Baptistine"
-		},
-		{
-				"source": "Mlle.Baptistine",
-				"target": "Napoleon"
-		},
-		{
-				"source": "Mireel",
-				"target": "Napoleon"
-		}
-	]}
-	);
-
-	
+  const [graphData, setGraphData] = useState({ nodes: [], links: []});
 
   const addNode = () => {
 		const node = {
@@ -212,9 +171,8 @@ export default function BasicNodeChart({optionsModal, loggedInUser} : any) {
 		}
 	}
 
-
 	// firebase
-	const [graphFirebase,setGraphFirebase] = useState<any>();
+	const [graphFirebase,setGraphFirebase] = useState<any>({ nodes: [], links: []});
 	const [loading,setLoading] = useState<boolean>(true);
 	console.log('graphFirebase',graphFirebase);
 
@@ -229,6 +187,18 @@ export default function BasicNodeChart({optionsModal, loggedInUser} : any) {
 		return;
  	};
  
+	 const updateGraph = async () => {
+		const graphRef = doc(db,'users',loggedInUser.uid);
+		const data = {
+			graph: graphData,
+		}
+		await updateDoc(graphRef, 
+			{
+			graph: graphData
+		});
+		message.success('Graph updated!');
+	}
+
 	useEffect( () => {
 			getUserFromFirebase();
 			// reset loading
@@ -254,6 +224,7 @@ export default function BasicNodeChart({optionsModal, loggedInUser} : any) {
 					isNodeRemoving, setIsNodeRemoving,
 					isLinking, setIsLinking,
 					activeLinking,
+					updateGraph
 				}}
 				graphOptions={{
 					enableFocusOnNode, setEnableFocusOnNode,

@@ -2470,6 +2470,11 @@ postcss@^8.4.18, postcss@^8.4.4:
     picocolors "^1.0.0"
     source-map-js "^1.0.2"
 
+postprocessing@^6.29.3:
+  version "6.29.3"
+  resolved "https://registry.yarnpkg.com/postprocessing/-/postprocessing-6.29.3.tgz#a878b2e60ef0402193e782e9580e90516a10f1f8"
+  integrity sha512-gxXC6LKLRwI4eSySdmxqEfQBMKEdQtxg5aYrdvJ/tPHDOS4aZAb/bY4ulQnL5YGKqCC6SmgNmU4dNIc68TTVMw==
+
 present@0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/present/-/present-0.0.6.tgz#9eeff700daa9e998613352e47f7ac2324d4faf02"
@@ -3287,6 +3292,11 @@ three-buffer-vertex-data@dmarcos/three-buffer-vertex-data#69378fc58daf27d3b1d930
   dependencies:
     flatten-vertex-data "^1.0.0"
 
+three-css2drender@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/three-css2drender/-/three-css2drender-1.0.0.tgz#2065e64c9d117033c08bfdc957a78edfe4b6ed1b"
+  integrity sha512-redDCSBDvgxiJIm6EDT8WO5WJTVg5gUEy/vjtAgJa/zX4peEUnZ8K+mXo6v94EudbnuI5h48/hQo9NExf04ENg==
+
 three-forcegraph@^1.39:
   version "1.40.0"
   resolved "https://registry.yarnpkg.com/three-forcegraph/-/three-forcegraph-1.40.0.tgz#797a0b37fbc3977529caa03410cbeb6bd8419385"
@@ -3322,6 +3332,11 @@ three-render-objects@^1.27:
   version "0.148.0"
   resolved "https://registry.yarnpkg.com/three/-/three-0.148.0.tgz#b6f62f9c84227f8d51c151bf17b67984ded8e4d7"
   integrity sha512-8uzVV+qhTPi0bOFs/3te3RW6hb3urL8jYEl6irjCWo/l6sr8MPNMcClFev/MMYeIxr0gmDcoXTy/8LXh/LXkfw==
+
+three@^0.149.0:
+  version "0.149.0"
+  resolved "https://registry.yarnpkg.com/three/-/three-0.149.0.tgz#a9cf78b17d02f063ffe6dfca1e300eff2eab2927"
+  integrity sha512-tohpUxPDht0qExRLDTM8sjRLc5d9STURNrdnK3w9A+V4pxaTBfKWWT/IqtiLfg23Vfc3Z+ImNfvRw1/0CtxrkQ==
 
 throttle-debounce@^5.0.0:
   version "5.0.0"

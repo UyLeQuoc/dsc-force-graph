@@ -89,3 +89,11 @@
 .ProseMirror ul[data-type="taskList"] li > div {
   flex: 1 1 auto;
 }
+
+.node-label {
+  font-size: 12px;
+  padding: 1px 4px;
+  border-radius: 4px;
+  background-color: rgba(0,0,0,0.5);
+  user-select: none;
+}

@@ -1,4 +1,4 @@
-import { Button, Drawer, message, Space } from "antd";
+import { Button, Drawer, message, Popconfirm, Space } from "antd";
 import { useEffect, useRef, useState } from "react";
 import ForceGraph3D, { ForceGraphMethods, GraphData } from "react-force-graph-3d";
 import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
@@ -7,6 +7,9 @@ import { db } from "../utils/firebase";
 import AsideOptions from "./AsideOptions";
 import { useRouter } from "next/router";
 import ShowNote from "./ShowNote";
+import * as THREE from 'three'
+import {CSS2DRenderer, CSS2DObject} from 'three-css2drender'
+import {UnrealBloomPass} from 'three/examples/jsm/postprocessing/UnrealBloomPass'
 
 type INode = {
 	id: string;
@@ -47,7 +50,7 @@ export default function BasicNodeChart({optionsModal, loggedInUser} : any) {
 	// const [linkColor, setLinkColor] = useState('#888888');
 
 	// Graph Options State
-	const [enableFocusOnNode, setEnableFocusOnNode] = useState(true);
+	const [enableFocusOnNode, setEnableFocusOnNode] = useState(false);
 	const [enableNodeDrag, setEnableNodeDrag] = useState(true);
 	const [enableShowLabels, setEnableShowLabels] = useState(true);
 	const [enableShowLinks, setEnableShowLinks] = useState(true);
@@ -216,13 +219,31 @@ export default function BasicNodeChart({optionsModal, loggedInUser} : any) {
 		message.success('Graph updated!');
 	}
 
+	const confirm = (e: React.MouseEvent<HTMLElement>) => {
+		removeNode(modalNode);
+		onClose();
+	};
+
 	useEffect( () => {
 			getUserFromFirebase();
 			// reset loading
 			setTimeout(() => {
 				setLoading(false);
 			},2000)
+			
+			// bloom effect
+			// const bloomPass = new UnrealBloomPass();
+			// console.log('bloomPass',bloomPass);
+			// bloomPass.strength = 1;
+			// bloomPass.radius = 1;
+			// bloomPass.threshold = 0.1;
+			// fgRef.current.postProcessingComposer().addPass(bloomPass);
+
 	},[]);
+
+	// graph effect
+	const extraRenderers = [new CSS2DRenderer()];
+	
 
 
   return (
@@ -253,13 +274,22 @@ export default function BasicNodeChart({optionsModal, loggedInUser} : any) {
 				}}
 			/>
 			<ForceGraph3D
+				extraRenderers={extraRenderers}
 				ref={fgRef}
 				graphData={graphData}
 				nodeLabel="id"
 				nodeAutoColorBy="group"
 				onNodeClick={handleNodeClick}
 				onLinkClick={handleLinkClick}
-				backgroundColor="#404040"
+				backgroundColor="#000000"
+				// nodeThreeObject={node => {
+				// 	const nodeEl = document.createElement('div');
+				// 	nodeEl.textContent = node.id;
+				// 	nodeEl.style.color = node.color;
+				// 	nodeEl.className = 'node-label';
+				// 	return new CSS2DRenderer(nodeEl);
+				// }}
+				nodeThreeObjectExtend={true}
 				
 				linkDirectionalParticles="value"
         linkDirectionalParticleSpeed={(d : any ) => d?.value * 0.001}
@@ -278,13 +308,18 @@ export default function BasicNodeChart({optionsModal, loggedInUser} : any) {
 						onClose={onClose}
 						open={open}
 						footer={
-							<>
-								<Button onClick={() => {
-								removeNode(modalNode);
-								onClose();
-							}}>Delete</Button>
+							<Space>
+								<Popconfirm
+									title="Delete the node"
+									description="Are you sure to delete this node?"
+									onConfirm={confirm}
+									okText="Yes"
+									cancelText="No"
+								>
+									<Button>Delete</Button>
+								</Popconfirm>
 							<Button type="primary" onClick={() => router.push(`/${loggedInUser.uid}/${modalNode.id}`)}>View {`/${loggedInUser.uid}/${modalNode.id}`}</Button>
-							</>
+							</Space>
 						}
 					>
 						<Space direction="vertical">

@@ -3,8 +3,6 @@ import Link from 'next/link'
 
 import { User } from '..'
 import { sampleUserData } from '../../utils/sample-data'
-import Layout from '../../components/ForceGraphOptions'
-import List from '../../components/FocusGraph'
 
 type Props = {
   items: User[]

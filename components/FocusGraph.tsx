@@ -1,10 +1,12 @@
-import { Drawer, message, Space } from "antd";
+import { Button, Drawer, message, Space } from "antd";
 import { useEffect, useRef, useState } from "react";
 import ForceGraph3D, { ForceGraphMethods, GraphData } from "react-force-graph-3d";
 import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { ILink } from "../interfaces";
 import { db } from "../utils/firebase";
 import AsideOptions from "./AsideOptions";
+import { useRouter } from "next/router";
+import ShowNote from "./ShowNote";
 
 type INode = {
 	id: string;
@@ -52,6 +54,8 @@ export default function BasicNodeChart({optionsModal, loggedInUser} : any) {
 	const [enableShowDirected, setEnableShowDirected] = useState(true);
 
   const [graphData, setGraphData] = useState({ nodes: [], links: []});
+
+	const router = useRouter();
 
   const addNode = () => {
 		const node = {
@@ -188,14 +192,27 @@ export default function BasicNodeChart({optionsModal, loggedInUser} : any) {
  	};
  
 	 const updateGraph = async () => {
-		const graphRef = doc(db,'users',loggedInUser.uid);
-		const data = {
-			graph: graphData,
+		const graphRef = doc(db,'users', loggedInUser.uid);
+
+		const output = {
+			graph: {
+				links: graphData.links.map(link => {
+					return {
+						source: link.source.id,
+						target: link.target.id,
+					}
+				}) || [],
+				nodes: graphData.nodes.map(node => {
+					return {
+						id: node.id,
+						group: node.group,
+					}
+				}) || []
+			}
 		}
-		await updateDoc(graphRef, 
-			{
-			graph: graphData
-		});
+		console.log('data',output)
+
+		await setDoc(graphRef, output, { merge: true });
 		message.success('Graph updated!');
 	}
 
@@ -206,6 +223,7 @@ export default function BasicNodeChart({optionsModal, loggedInUser} : any) {
 				setLoading(false);
 			},2000)
 	},[]);
+
 
   return (
 		<>
@@ -253,11 +271,21 @@ export default function BasicNodeChart({optionsModal, loggedInUser} : any) {
 			{
 				modalNode && (
 					<Drawer
+						width={600}
 						title="Basic Drawer"
 						placement={"right"}
 						closable={false}
 						onClose={onClose}
 						open={open}
+						footer={
+							<>
+								<Button onClick={() => {
+								removeNode(modalNode);
+								onClose();
+							}}>Delete</Button>
+							<Button type="primary" onClick={() => router.push(`/${loggedInUser.uid}/${modalNode.id}`)}>View {`/${loggedInUser.uid}/${modalNode.id}`}</Button>
+							</>
+						}
 					>
 						<Space direction="vertical">
 							<div>ID: {modalNode.id}</div>
@@ -266,10 +294,7 @@ export default function BasicNodeChart({optionsModal, loggedInUser} : any) {
 							<div>Index: {modalNode.index}</div>
 							<div>x: {modalNode.x}, y: {modalNode.y}. z: {modalNode.z}</div>
 							<div>vx: {modalNode.vx}, vy: {modalNode.vy}. vz: {modalNode.vz}</div>
-							<button onClick={() => {
-								removeNode(modalNode);
-								onClose();
-							}}>Delete</button>
+							<ShowNote userID={loggedInUser.uid} noteID={modalNode.id} />
 						</Space>
 
 					</Drawer>

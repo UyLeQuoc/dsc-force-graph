@@ -8,7 +8,7 @@ import AsideOptions from "./AsideOptions";
 import { useRouter } from "next/router";
 import ShowNote from "./ShowNote";
 import * as THREE from 'three'
-import {CSS2DRenderer, CSS2DObject} from 'three-css2drender'
+import {CSS2DRenderer, CSS2DObject} from 'three/examples/jsm/renderers/CSS2DRenderer.js'
 import {UnrealBloomPass} from 'three/examples/jsm/postprocessing/UnrealBloomPass'
 
 type INode = {
@@ -232,12 +232,12 @@ export default function BasicNodeChart({optionsModal, loggedInUser} : any) {
 			},2000)
 			
 			// bloom effect
-			// const bloomPass = new UnrealBloomPass();
-			// console.log('bloomPass',bloomPass);
-			// bloomPass.strength = 1;
-			// bloomPass.radius = 1;
-			// bloomPass.threshold = 0.1;
-			// fgRef.current.postProcessingComposer().addPass(bloomPass);
+			const bloomPass = new UnrealBloomPass();
+			console.log('bloomPass',bloomPass);
+			bloomPass.strength = 1;
+			bloomPass.radius = 1;
+			bloomPass.threshold = 0.1;
+			fgRef.current.postProcessingComposer().addPass(bloomPass);
 
 	},[]);
 
@@ -282,13 +282,13 @@ export default function BasicNodeChart({optionsModal, loggedInUser} : any) {
 				onNodeClick={handleNodeClick}
 				onLinkClick={handleLinkClick}
 				backgroundColor="#000000"
-				// nodeThreeObject={node => {
-				// 	const nodeEl = document.createElement('div');
-				// 	nodeEl.textContent = node.id;
-				// 	nodeEl.style.color = node.color;
-				// 	nodeEl.className = 'node-label';
-				// 	return new CSS2DRenderer(nodeEl);
-				// }}
+				nodeThreeObject={node => {
+					const nodeEl = document.createElement('div');
+					nodeEl.textContent = node.id;
+					nodeEl.style.color = node.color;
+					nodeEl.className = 'node-label';
+					return new CSS2DObject(nodeEl);
+				}}
 				nodeThreeObjectExtend={true}
 				
 				linkDirectionalParticles="value"

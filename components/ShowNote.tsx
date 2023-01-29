@@ -17,7 +17,7 @@ function ShowNote({userID, noteID} : {userID: string, noteID: string}) {
 	const getNoteFromFirebase = async (userID, noteID) => {
 		if(!userID || !noteID) return;
 		console.log("render ShowNote", userID, noteID)
-		const noteRef = doc(db,userID, noteID);
+		const noteRef = doc(db, `${userID}`, `${noteID}`);
 		const noteSnap = await getDoc(noteRef);
 		if (noteSnap.exists()) {
 			console.log('note data: ', noteSnap.data());

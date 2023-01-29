@@ -22,7 +22,7 @@ function App() {
 	console.log('noteFirebase',noteFirebase);
 
 	const getNoteFromFirebase = async () => {
-		const noteRef = doc(db,userID, noteID);
+		const noteRef = doc(db, `${userID}`, `${noteID}`);
 		const noteSnap = await getDoc(noteRef);
 		if (noteSnap.exists()) {
 			console.log('note data: ', noteSnap.data());
@@ -46,7 +46,7 @@ function App() {
 	}
 
 	const updateNote = async (content) => {
-		const noteRef = doc(db,userID, noteID);
+		const noteRef = doc(db, `${userID}`, `${noteID}`);
 		const data = {
 			content: content,
 			timestamp: serverTimestamp()

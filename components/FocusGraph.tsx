@@ -56,7 +56,7 @@ export default function BasicNodeChart({optionsModal, loggedInUser} : any) {
 
 	const removeNode = (node) => {
 		const updateNode = graphData.nodes.filter(item => item.id !== node.id);
-		const updateLinks = graphData.links.filter(item => item.target?.id !== node.id && item.source?.id !== node.id);
+		const updateLinks = graphData.links.filter((item : any) => item.target?.id !== node.id && item.source?.id !== node.id);
 
 		const dataToUpdate = { ...graphData };
 		dataToUpdate.nodes = updateNode;

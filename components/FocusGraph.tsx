@@ -37,6 +37,8 @@ export default function BasicNodeChart({optionsModal, loggedInUser} : any) {
 	const router = useRouter();
 
   const addNode = () => {
+		if(!nodeName || !nodeGroup) return message.error('Node name and Node Group is required');
+
 		const node = {
 			id: uuidv4(),
 			name: nodeName,
@@ -188,8 +190,8 @@ export default function BasicNodeChart({optionsModal, loggedInUser} : any) {
 		if (userSnap.exists()) {
 			setGraphFirebase(userSnap.data());
 			setGraphData({
-				nodes: userSnap.data().graph.nodes || [],
-				links: userSnap.data().graph.links || [],
+				nodes: userSnap.data().graph?.nodes || [],
+				links: userSnap.data().graph?.links || [],
 			} || {nodes:[],links:[]});
 		}
 		return;
@@ -280,14 +282,14 @@ export default function BasicNodeChart({optionsModal, loggedInUser} : any) {
 				extraRenderers={extraRenderers}
 				ref={fgRef}
 				graphData={graphData}
-				nodeLabel="id"
+				nodeLabel="name"
 				nodeAutoColorBy="group"
 				onNodeClick={handleNodeClick}
 				onLinkClick={handleLinkClick}
 				backgroundColor="#000000"
 				nodeThreeObject={node => {
 					const nodeEl = document.createElement('div');
-					nodeEl.textContent = node.id;
+					nodeEl.textContent = node.name;
 					nodeEl.style.color = node.color;
 					nodeEl.className = 'node-label';
 					return new CSS2DObject(nodeEl);
@@ -310,7 +312,7 @@ export default function BasicNodeChart({optionsModal, loggedInUser} : any) {
 						closable={false}
 						onClose={onClose}
 						open={open}
-						footer={
+						extra={
 							<Space>
 								<Popconfirm
 									title="Delete the node"
@@ -321,7 +323,7 @@ export default function BasicNodeChart({optionsModal, loggedInUser} : any) {
 								>
 									<Button>Delete</Button>
 								</Popconfirm>
-							<Button type="primary" onClick={() => router.push(`/${loggedInUser.uid}/${modalNode.id}`)}>View {`/${loggedInUser.uid}/${modalNode.id}`}</Button>
+							<Button type="primary" onClick={() => router.push(`/${loggedInUser.uid}/${modalNode.id}`)}>View</Button>
 							</Space>
 						}
 					>

@@ -1,7 +1,10 @@
 import { Dispatch, SetStateAction, useState } from 'react';
-import { Button, Drawer, Radio, Space } from 'antd';
+import { Avatar, Button, Divider, Drawer, Input, List, Radio, Space, Typography } from 'antd';
 import GraphOptions from './GraphOptions';
 import DataOptions from './DataOptions';
+import { auth } from '../utils/firebase';
+import { signOut } from 'firebase/auth';
+import { useAuthState } from 'react-firebase-hooks/auth';
 
 type IProps = {
   graphData: {
@@ -40,6 +43,7 @@ type IProps = {
 }
 
 const AsideOptions = ({graphOptions, graphData, dataOptions, optionsModal}: IProps) => {
+  const [loggedInUser, _loading, _error] = useAuthState(auth);
 
   // Node Data State
   const {nodeName, setNodeName, nodeGroup, setNodeGroup, nodeValue, setNodeValue} = graphData;
@@ -51,29 +55,42 @@ const AsideOptions = ({graphOptions, graphData, dataOptions, optionsModal}: IPro
   return (
     <>
       <Drawer
-        title="Basic Drawer"
+        title={`(LogoDSC) DSC Focus Graph`}
         placement={"left"}
         closable={false}
         onClose={onClose}
         open={open}
+        footer={
+          <Button type='primary' onClick={() => {updateGraph()}}>Update Graph</Button> 
+        }
       >
+        <List>
+          <List.Item
+            actions={[<a onClick={() => signOut(auth)}>Sign Out</a>]}
+          >
+            <List.Item.Meta
+              avatar={<Avatar src={loggedInUser?.photoURL} />}
+              title={<h4>{loggedInUser?.displayName}</h4>}
+              description={`logged in as ${loggedInUser?.email}`}
+            />
+          </List.Item>
+        </List>
+        
+        <Divider orientation="left">Create Node:</Divider>
+        <Space direction="vertical">
+          <Typography.Text>Node Name</Typography.Text>
+          <Input placeholder="Node Name" value={nodeName} onChange={(e) => setNodeName(e.target.value)}/>
+          <Typography.Text>Node Group</Typography.Text>
+          <Input placeholder="Node Group" value={nodeGroup} onChange={(e) => setNodeGroup(e.target.value)}/>
+          <Button type="primary" onClick={addNode}>Create</Button>
+        </Space>
+
         <GraphOptions
           graphOptions = {graphOptions}
         />
         <DataOptions
           dataOptions = {dataOptions}
         />
-
-        <h3>New Node</h3>
-        <Space direction="vertical">
-          <input type="text" placeholder="Node Name" value={nodeName} onChange={(e) => setNodeName(e.target.value)}/>
-          <input type="text" placeholder="Node Group" value={nodeGroup} onChange={(e) => setNodeGroup(e.target.value)}/>  
-          
-          <Button type="primary" onClick={addNode}>Add</Button>
-          <Button onClick={() => {updateGraph()}}>Update Graph</Button> 
-        </Space>
-
-        
       </Drawer>
     </>
   );

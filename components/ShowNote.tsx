@@ -1,4 +1,4 @@
-import { message } from 'antd';
+import { Empty, message } from 'antd';
 import { doc, getDoc } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth';
@@ -46,7 +46,9 @@ function ShowNote({userID, noteID} : {userID: string, noteID: string}) {
   return (
     <>
       {
-				isEmpty ? (<h1>"No Note To Show"</h1>) : (
+				isEmpty ? (
+					<Empty />
+				) : (
 					<Editor noteFirebase={noteFirebase} loading={loading} isReadable={true} updateNote={undefined} />
 				)
 			}

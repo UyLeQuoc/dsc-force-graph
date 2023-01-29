@@ -2,7 +2,9 @@ import React from 'react'
 
 function Loading() {
   return (
-    <div>Loading</div>
+    <div className='bg-purple-600 fixed h-11 w-full'>Loading
+
+    </div>
   )
 }
 

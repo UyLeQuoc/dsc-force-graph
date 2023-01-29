@@ -3,8 +3,8 @@ import {auth} from '../utils/firebase'
 import { signOut } from "firebase/auth";
 import { useState } from "react";
 import FocusGraphWrapper from "../components/FocusGraphWrapper";
-import AsideOptions from "../components/AsideOptions";
 import { Button } from 'antd';
+import {MenuUnfoldOutlined, MenuFoldOutlined} from '@ant-design/icons';
 
 export default function Index() {
 	const [loggedInUser, _loading, _error] = useAuthState(auth);
@@ -20,14 +20,9 @@ export default function Index() {
   };
 
   return <div className='overflow-hidden'>
-    <div className='fixed z-10 bg-amber-200'>
-      <h1>Focus Graph</h1>
-      <div>Hi {loggedInUser?.displayName}!</div>
-      <Button onClick={() => signOut(auth)}>Sign out</Button>
-			{/* <button onClick={addNode}>Add</button>
-			<button onClick={() => removeNode({id: 'Myriel', group: 1, color: '#a6cee3'})}>Remove</button> */}
+    <div className='fixed z-10 p-6'>
 			<Button type="primary" onClick={showDrawer}>
-        Open
+        {open ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
       </Button>
 		</div>
 

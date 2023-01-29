@@ -8,8 +8,3 @@ export type User = {
   id: number
   name: string
 }
-
-export type ILink = {
-  source: string
-  target: string
-}

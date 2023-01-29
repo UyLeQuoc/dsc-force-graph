@@ -5,8 +5,6 @@ import DataOptions from './DataOptions';
 
 type IProps = {
   graphData: {
-    nodeID: string;
-    setNodeID: Dispatch<SetStateAction<string>>;
     nodeName: string;
     setNodeName: Dispatch<SetStateAction<string>>;
     nodeGroup: string;
@@ -44,7 +42,7 @@ type IProps = {
 const AsideOptions = ({graphOptions, graphData, dataOptions, optionsModal}: IProps) => {
 
   // Node Data State
-  const {nodeID, setNodeID, nodeName, setNodeName, nodeGroup, setNodeGroup, nodeValue, setNodeValue} = graphData;
+  const {nodeName, setNodeName, nodeGroup, setNodeGroup, nodeValue, setNodeValue} = graphData;
   // Data Options State
   const {addNode, removeNode, isLinkRemoving, setIsLinkRemoving, isNodeRemoving, setIsNodeRemoving, activeLinking, updateGraph} = dataOptions;
   const {open, onClose} = optionsModal;
@@ -68,14 +66,10 @@ const AsideOptions = ({graphOptions, graphData, dataOptions, optionsModal}: IPro
 
         <h3>New Node</h3>
         <Space direction="vertical">
-          <input type="text" placeholder="Node ID" value={nodeID} onChange={(e) => setNodeID(e.target.value)}/>
           <input type="text" placeholder="Node Name" value={nodeName} onChange={(e) => setNodeName(e.target.value)}/>
           <input type="text" placeholder="Node Group" value={nodeGroup} onChange={(e) => setNodeGroup(e.target.value)}/>  
           
           <Button type="primary" onClick={addNode}>Add</Button>
-          <Button onClick={() => {activeLinking()}}>Insert links</Button>
-          <Button onClick={() => {setIsNodeRemoving(!isNodeRemoving)}}>Set Mode Remove Node</Button>
-					<Button onClick={() => {setIsLinkRemoving(!isLinkRemoving)}}>Set Mode Remove links</Button>
           <Button onClick={() => {updateGraph()}}>Update Graph</Button> 
         </Space>
 

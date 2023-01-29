@@ -28,7 +28,8 @@
     "react-force-graph": "^1.41.18",
     "react-force-graph-3d": "^1.21.17",
     "three": "^0.149.0",
-    "three-css2drender": "^1.0.0"
+    "three-css2drender": "^1.0.0",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@fullhuman/postcss-purgecss": "^5.0.0",

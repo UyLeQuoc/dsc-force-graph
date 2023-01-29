@@ -1,51 +1,27 @@
 import { Button, Drawer, message, Popconfirm, Space } from "antd";
 import { useEffect, useRef, useState } from "react";
-import ForceGraph3D, { ForceGraphMethods, GraphData } from "react-force-graph-3d";
+import ForceGraph3D, { ForceGraphMethods, GraphData, NodeObject, LinkObject } from "react-force-graph-3d";
 import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
-import { ILink } from "../interfaces";
 import { db } from "../utils/firebase";
 import AsideOptions from "./AsideOptions";
 import { useRouter } from "next/router";
 import ShowNote from "./ShowNote";
-import * as THREE from 'three'
 import {CSS2DRenderer, CSS2DObject} from 'three/examples/jsm/renderers/CSS2DRenderer.js'
 import {UnrealBloomPass} from 'three/examples/jsm/postprocessing/UnrealBloomPass'
+import { v4 as uuidv4 } from 'uuid';
 
-type INode = {
-	id: string;
-	name: string;
-	group: number;
-	color: string;
-	index: number;
-	x, y, z: number;
-	vx, vy, vz: number;
-}
-
-type IProps = {
-	graphData: GraphData;
-	handleLinkClick: any;
-	removeNode: any;
-	nodeID: string;
-	setNodeID: any;
-	nodeName: string;
-	setNodeName: any;
-	nodeGroup: string;
-	setNodeGroup: any;
-	addNode: any;
-}
 
 export default function BasicNodeChart({optionsModal, loggedInUser} : any) {
 	// Node Data State
-	const [nodeID, setNodeID] = useState('');
-  const [nodeName, setNodeName] = useState('');
-	const [nodeGroup, setNodeGroup] = useState('');
-  const [nodeValue, setNodeValue] = useState(0);
+  const [nodeName, setNodeName] = useState<string>('');
+	const [nodeGroup, setNodeGroup] = useState<string>('');
+  const [nodeValue, setNodeValue] = useState<number>(0);
   const [action, setAction] = useState(false);
 
 	const [isNodeRemoving, setIsNodeRemoving] = useState(false);
 	const [isLinkRemoving, setIsLinkRemoving] = useState(false);
 	const [isLinking, setIsLinking] = useState(false);
-	const [nodeToLink, setNodeToLink] = useState(null);
+	const [nodeToLink, setNodeToLink] = useState<NodeObject>(null);
 	// const [linkName, setLinkName] = useState('');
 	// const [linkColor, setLinkColor] = useState('#888888');
 
@@ -56,14 +32,15 @@ export default function BasicNodeChart({optionsModal, loggedInUser} : any) {
 	const [enableShowLinks, setEnableShowLinks] = useState(true);
 	const [enableShowDirected, setEnableShowDirected] = useState(true);
 
-  const [graphData, setGraphData] = useState({ nodes: [], links: []});
+  const [graphData, setGraphData] = useState<GraphData>({ nodes: [], links: []});
 
 	const router = useRouter();
 
   const addNode = () => {
 		const node = {
-			id: nodeID,
-			group: parseInt(nodeGroup),
+			id: uuidv4(),
+			name: nodeName,
+			group: nodeGroup,
 		};
 		const newGraphData = { ...graphData };
 		const nodesList = [...newGraphData.nodes] || [];
@@ -88,20 +65,19 @@ export default function BasicNodeChart({optionsModal, loggedInUser} : any) {
 		setGraphData(dataToUpdate);
 	}
 
-	const removeLink = (link) => {
+	const removeLink = (link : LinkObject | any) => {
 		const updateLinks = graphData.links.filter(item => item !== link);
-		console.log('updateLinks', updateLinks)
 		const dataToUpdate = { ...graphData };
 		dataToUpdate.links = updateLinks;
 		message.success('Removed link from ' + link.source.id + ' to ' + link.target.id + ' sucessfully');
-
 		setGraphData(dataToUpdate);
 	}
 
 	const fgRef = useRef<ForceGraphMethods>();
-	const [modalNode, setModalNode] = useState<INode>(null);
+	const [modalNode, setModalNode] = useState<NodeObject | any>(null);
 	const [open, setOpen] = useState(false);
 
+	console.log('graphData testing', graphData);
   const showDrawer = (node) => {
 		setModalNode(node);
     setOpen(true);
@@ -116,7 +92,25 @@ export default function BasicNodeChart({optionsModal, loggedInUser} : any) {
 		if (isLinkRemoving) return removeLink(link);
 	}
 
-  const handleNodeClick = (node) => {
+	const getGraphFilterAttribute = (graph: GraphData) => {
+		return {
+			nodes: graph.nodes.map((node : NodeObject | any) => {
+				return {
+					id: node.id,
+					name: 'test',
+					group: node.group,
+				}
+			}),
+			links: graphData.links.map((link : LinkObject | any) => {
+				return {
+					source: link.source.id,
+					target: link.target.id,
+					value: link.value,
+				}
+			})
+		}
+	}
+  const handleNodeClick = (node: NodeObject | any) => {
 		 console.log('nodeToLink: ', nodeToLink)
 			if (isNodeRemoving) return removeNode(node);
       if(!isNodeRemoving && enableFocusOnNode && !isLinkRemoving && !isLinking){
@@ -150,13 +144,14 @@ export default function BasicNodeChart({optionsModal, loggedInUser} : any) {
 					return;
 				}
 	
-				const newLink : ILink = { source: nodeToLink, target: node };
-				const updateData = { ...graphData };
+				const newLink : LinkObject = { source: nodeToLink.id, target: node.id };
+				const updateData : GraphData | any = { ...graphData };
 
 				let isDuplicateLink = () => {
 					let isDuplicate = false;
 					updateData.links.forEach(link => {
-						if (link.source.id === newLink.source.id && link.target.id === newLink.target.id) {
+						console.log(link.source, newLink.source, link.target, newLink.target);
+						if (link.source.id === newLink.source && link.target.id === newLink.target) {
 							isDuplicate = true;
 						}
 					});
@@ -173,6 +168,11 @@ export default function BasicNodeChart({optionsModal, loggedInUser} : any) {
   }
 
 	const activeLinking = () => {
+		if(isLinking){
+			setIsLinking(false);
+			setNodeToLink(null);
+			return;
+		}
 		if (!isNodeRemoving && !isLinkRemoving && !isLinking) {
 			setIsLinking(true);
 		}
@@ -181,15 +181,16 @@ export default function BasicNodeChart({optionsModal, loggedInUser} : any) {
 	// firebase
 	const [graphFirebase,setGraphFirebase] = useState<any>({ nodes: [], links: []});
 	const [loading,setLoading] = useState<boolean>(true);
-	console.log('graphFirebase',graphFirebase);
 
 	const getUserFromFirebase = async () => {
 		const userRef = doc(db,'users', loggedInUser.uid);
 		const userSnap = await getDoc(userRef);
 		if (userSnap.exists()) {
-			console.log('User data: ', userSnap.data());
 			setGraphFirebase(userSnap.data());
-			setGraphData(userSnap.data().graph || {nodes:[],links:[]});
+			setGraphData({
+				nodes: userSnap.data().graph.nodes || [],
+				links: userSnap.data().graph.links || [],
+			} || {nodes:[],links:[]});
 		}
 		return;
  	};
@@ -199,16 +200,19 @@ export default function BasicNodeChart({optionsModal, loggedInUser} : any) {
 
 		const output = {
 			graph: {
-				links: graphData.links.map(link => {
+				links: graphData.links.map((link : any) => {
+					console.log('link tsting',link)
 					return {
 						source: link.source.id,
 						target: link.target.id,
+						value: 1,
 					}
 				}) || [],
-				nodes: graphData.nodes.map(node => {
+				nodes: graphData.nodes.map((node : NodeObject|any) => {
 					return {
 						id: node.id,
 						group: node.group,
+						name: node.name,
 					}
 				}) || []
 			}
@@ -251,7 +255,6 @@ export default function BasicNodeChart({optionsModal, loggedInUser} : any) {
 			<AsideOptions
 				optionsModal = {optionsModal}
 				graphData={{
-					nodeID, setNodeID,
 					nodeName, setNodeName,
 					nodeGroup, setNodeGroup,
 					nodeValue, setNodeValue,
@@ -324,12 +327,12 @@ export default function BasicNodeChart({optionsModal, loggedInUser} : any) {
 					>
 						<Space direction="vertical">
 							<div>ID: {modalNode.id}</div>
+							<div>Name: {modalNode.name}</div>
 							<div>Group: {modalNode.group}</div>
 							<div>Color: {modalNode.color}</div>
-							<div>Index: {modalNode.index}</div>
 							<div>x: {modalNode.x}, y: {modalNode.y}. z: {modalNode.z}</div>
 							<div>vx: {modalNode.vx}, vy: {modalNode.vy}. vz: {modalNode.vz}</div>
-							<ShowNote userID={loggedInUser.uid} noteID={modalNode.id} />
+							<ShowNote userID={loggedInUser.uid} noteID={`${modalNode.id}`} />
 						</Space>
 
 					</Drawer>

@@ -309,7 +309,7 @@ export default function BasicNodeChart({optionsModal, loggedInUser} : any) {
 						width={600}
 						title="Basic Drawer"
 						placement={"right"}
-						closable={false}
+						closable={true}
 						onClose={onClose}
 						open={open}
 						extra={

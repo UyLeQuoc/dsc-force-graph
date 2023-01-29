@@ -97,3 +97,7 @@
   background-color: rgba(0,0,0,0.5);
   user-select: none;
 }
+
+.ant-drawer-mask{
+  position: relative !important; 
+}

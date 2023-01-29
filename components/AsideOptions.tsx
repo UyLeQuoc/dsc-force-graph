@@ -57,9 +57,10 @@ const AsideOptions = ({graphOptions, graphData, dataOptions, optionsModal}: IPro
       <Drawer
         title={`(LogoDSC) DSC Focus Graph`}
         placement={"left"}
-        closable={false}
+        closable={true}
         onClose={onClose}
         open={open}
+        
         footer={
           <Button type='primary' onClick={() => {updateGraph()}}>Update Graph</Button> 
         }

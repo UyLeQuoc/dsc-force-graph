@@ -29,6 +29,10 @@ To contribute, you need to have the following prerequisites installed:
 
 - `yarn build`
 
+## Bug report or Feature request
+
+If you encounter a bug or have a feature request, [send us an email](mailto:lequocuyit@gmai.com), [create an issue]https://github.com/UyLeQuoc/dsc-force-graph/issues).
+
 ## License
 
 The MIT License.

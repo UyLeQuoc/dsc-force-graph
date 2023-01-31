@@ -44,3 +44,18 @@ If you encounter a bug or have a feature request, [send us an email](mailto:lequ
 ## License
 
 The MIT License.
+
+## Libraries Used
+
+These open source libraries were used to create this project.
+
+* [NextJS](https://nextjs.org/)
+* [React-Force-Graph]
+* [Firebase]
+* [React-Firebase-Hooks]
+* [ThreeJS]
+* [Tailwind]
+* [Ant Design]
+* [Typescript]
+
+<p align="right"><a href="#top">⬆️ Back to top️</a></p>

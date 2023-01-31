@@ -21,8 +21,8 @@
 - Edit or delete nodes
 - Save Graph
 
-## Wireframe
-
+## Demo
+![](https://firebasestorage.googleapis.com/v0/b/dsc-graph.appspot.com/o/images%2FScreenshot_20230131_065745.png?alt=media&token=59538fb1-09ee-4417-8d4a-0e26751b900e)
 
 ## Collaboration
 

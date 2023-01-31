@@ -23,7 +23,8 @@
 
 ## Demo
 ![](https://firebasestorage.googleapis.com/v0/b/dsc-graph.appspot.com/o/images%2FScreenshot_20230131_065745.png?alt=media&token=59538fb1-09ee-4417-8d4a-0e26751b900e)
-
+![](https://firebasestorage.googleapis.com/v0/b/dsc-graph.appspot.com/o/images%2FScreenshot_20230131_070403.png?alt=media&token=d2babdc7-1df0-4941-82dc-ef1fd94e14de)
+![](https://firebasestorage.googleapis.com/v0/b/dsc-graph.appspot.com/o/images%2FScreenshot_20230131_070326.png?alt=media&token=c9f795bd-c456-47c4-95dd-859c89cda37d)
 ## Collaboration
 
 ### Prerequisites
@@ -63,5 +64,6 @@ These open source libraries were used to create this project.
 * [Tailwind]
 * [Ant Design]
 * [Typescript]
+* [TipTap 2.0]
 
 <p align="right"><a href="#top">⬆️ Back to top️</a></p>

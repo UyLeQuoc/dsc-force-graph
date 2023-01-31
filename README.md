@@ -4,9 +4,9 @@
 
 ## Features
 - A graphical representation of lessons or exercises and their relationships
-- The ability to attach notes to each node in the graph
+- Attach notes to each node in the graph
 - A force-directed graph layout that makes it visually appealing and easy to navigate
-- The ability to add, edit, and delete nodes and their associated notes
+- Add, edit, and delete nodes and their associated notes
 - The ability to zoom in and out and pan around the graph for better viewing.
 - A search function to quickly find specific nodes in the graph (Upcoming)
 - The ability to export and save the graph as an image or other file format (Upcoming)

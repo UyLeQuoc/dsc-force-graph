@@ -13,10 +13,16 @@
 - Responsive design for optimal viewing on different devices and screen sizes (Upcoming)
 
 ## How to use
-- ...
-- ...
+- Login with Google
+- Create nodes: Start by adding nodes to the graph to represent lessons or exercises. Each node can be given a title and an optional note.
+- Connect nodes: Connect nodes to represent the relationships between lessons or exercises. This can be done by drawing a line between two nodes.
+- Add notes: Click on a node to add or edit its note. This note can include information such as descriptions, instructions, or additional resources.
+- Navigate the graph: Use the left and right mouse  to pan around the graph and zoom in and out for better viewing.
+- Edit or delete nodes
+- Save Graph
 
 ## Wireframe
+
 
 ## Collaboration
 

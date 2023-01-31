@@ -6,7 +6,7 @@ import FocusGraphWrapper from "../components/FocusGraphWrapper";
 import { Button } from 'antd';
 import {MenuUnfoldOutlined, MenuFoldOutlined} from '@ant-design/icons';
 
-export default function Index() {
+export default function Index() : JSX.Element {
 	const [loggedInUser, _loading, _error] = useAuthState(auth);
 
 	const [open, setOpen] = useState(false);

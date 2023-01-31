@@ -190,8 +190,8 @@ export default function BasicNodeChart({optionsModal, loggedInUser} : any) {
 		if (userSnap.exists()) {
 			setGraphFirebase(userSnap.data());
 			setGraphData({
-				nodes: userSnap.data().graph?.nodes || [],
-				links: userSnap.data().graph?.links || [],
+				nodes: userSnap.data().graph?.nodes,
+				links: userSnap.data().graph?.links,
 			} || {nodes:[],links:[]});
 		}
 		return;

@@ -1,7 +1,7 @@
 import { Button, Drawer, message, Popconfirm, Space } from "antd";
 import { useEffect, useRef, useState } from "react";
 import ForceGraph3D, { ForceGraphMethods, GraphData, NodeObject, LinkObject } from "react-force-graph-3d";
-import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "../utils/firebase";
 import AsideOptions from "./AsideOptions";
 import { useRouter } from "next/router";
@@ -9,9 +9,9 @@ import ShowNote from "./ShowNote";
 import {CSS2DRenderer, CSS2DObject} from 'three/examples/jsm/renderers/CSS2DRenderer.js'
 import {UnrealBloomPass} from 'three/examples/jsm/postprocessing/UnrealBloomPass'
 import { v4 as uuidv4 } from 'uuid';
+import { IGraphInfo } from '../interfaces/index'
 
-
-export default function BasicNodeChart({optionsModal, loggedInUser} : any) {
+export default function BasicNodeChart({optionsModal, loggedInUser, graphID} : any) {
 	// Node Data State
   const [nodeName, setNodeName] = useState<string>('');
 	const [nodeGroup, setNodeGroup] = useState<string>('');
@@ -181,14 +181,20 @@ export default function BasicNodeChart({optionsModal, loggedInUser} : any) {
 	}
 
 	// firebase
-	const [graphFirebase,setGraphFirebase] = useState<any>({ nodes: [], links: []});
+	const [graphInfoFirebase, setGraphInfoFirebase] = useState<IGraphInfo>({
+		title: 'Basic Graph Test',
+		owner: 'test',
+		graph: {
+			nodes: [],
+			links: [],
+		}
+	});
 	const [loading,setLoading] = useState<boolean>(true);
 
 	const getUserFromFirebase = async () => {
-		const userRef = doc(db,'users', loggedInUser.uid);
+		const userRef = doc(db, 'users', loggedInUser.uid);
 		const userSnap = await getDoc(userRef);
 		if (userSnap.exists()) {
-			setGraphFirebase(userSnap.data());
 			setGraphData({
 				nodes: userSnap.data().graph?.nodes,
 				links: userSnap.data().graph?.links,
@@ -196,14 +202,25 @@ export default function BasicNodeChart({optionsModal, loggedInUser} : any) {
 		}
 		return;
  	};
+
+	 const getGraphInfoFromFirebase = async () => {
+		const graphInfoRef = doc(db,'graphs', graphID);
+		const graphInfoSnap = await getDoc(graphInfoRef);
+		if (graphInfoSnap.exists()) {
+			setGraphInfoFirebase(graphInfoSnap.data());
+			setGraphData({
+				nodes: graphInfoSnap.data().graph?.nodes,
+				links: graphInfoSnap.data().graph?.links,
+			} || {nodes:[],links:[]});
+		}
+ 	};
  
 	 const updateGraph = async () => {
-		const graphRef = doc(db,'users', loggedInUser.uid);
+		const graphRef = doc(db,'graphs', graphID);
 
 		const output = {
 			graph: {
 				links: graphData.links.map((link : any) => {
-					console.log('link tsting',link)
 					return {
 						source: link.source.id,
 						target: link.target.id,
@@ -217,7 +234,8 @@ export default function BasicNodeChart({optionsModal, loggedInUser} : any) {
 						name: node.name,
 					}
 				}) || []
-			}
+			},
+			lastModified: serverTimestamp(),
 		}
 		console.log('data',output)
 
@@ -231,7 +249,8 @@ export default function BasicNodeChart({optionsModal, loggedInUser} : any) {
 	};
 
 	useEffect( () => {
-			getUserFromFirebase();
+			// getUserFromFirebase();
+			getGraphInfoFromFirebase();
 			// reset loading
 			setTimeout(() => {
 				setLoading(false);
@@ -254,6 +273,8 @@ export default function BasicNodeChart({optionsModal, loggedInUser} : any) {
 
   return (
 		<>
+		<h1>{graphInfoFirebase.owner}</h1>
+		<h1>{graphInfoFirebase.title}</h1>		
 			<AsideOptions
 				optionsModal = {optionsModal}
 				graphData={{

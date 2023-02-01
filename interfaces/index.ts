@@ -4,7 +4,17 @@
 //
 // import { User } from 'path/to/interfaces';
 
+import { Timestamp } from "firebase/firestore";
+import { GraphData } from "react-force-graph-3d";
+
 export type User = {
   id: number
   name: string
+}
+
+export type IGraphInfo = {
+	title: string;
+	graph: GraphData;
+	owner: string;
+  lastModified: Timestamp;
 }

@@ -49,7 +49,7 @@ export default function LoginPage() {
           Header
         </Header>
         <Content style={contentStyle}>
-          <Row justify="center" align="middle" gutter={[20,20]}>
+          <Row justify="center" align="middle" gutter={[50,50]}>
             <Col span={10}>
               <Space direction="vertical">
                 <Typography.Title>

@@ -18,15 +18,20 @@ const headerStyle: React.CSSProperties = {
 };
 
 const contentStyle: React.CSSProperties = {
-  minHeight: 120,
-  lineHeight: '120px',
+  height: 'calc(95vh)',
   color: '#fff',
-  backgroundColor: '#fff',
+  backgroundColor: 'white',
+  'overflow': 'hidden',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
 };
 
 const footerStyle: React.CSSProperties = {
   textAlign: 'center',
   color: '#fff',
+  backgroundColor: '#001529',
 };
 
 export default function LoginPage() {
@@ -36,17 +41,16 @@ export default function LoginPage() {
     signInWithGoogle();
   };
 
-  const imgStyle = { width: "100%", height: "auto" };
-
   return (
     <>
       <Layout>
         <Header style={headerStyle}>
-          <Image src={Logo} alt="DSC logo" />
+          {/* <Image src={Logo} alt="DSC logo" /> */}
+          Header
         </Header>
         <Content style={contentStyle}>
-          <Row justify="center">
-            <Col span={6}>
+          <Row justify="center" align="middle" gutter={[20,20]}>
+            <Col span={10}>
               <Space direction="vertical">
                 <Typography.Title>
                   DSC Force Graph
@@ -76,11 +80,12 @@ export default function LoginPage() {
                 </Space>
               </Space>
             </Col>
-            <Col span={6}>
+            <Col span={10}>
               <Image
                 src={graphPreviewImage}
                 alt="Preview of 3D Graph"
-                style={imgStyle}
+                width={700}
+                height={400}
               />
             </Col>
           </Row>

@@ -53,19 +53,8 @@ const AsideOptions = ({graphOptions, graphData, dataOptions, optionsModal}: IPro
 
 
   return (
-    <>
-      <Drawer
-        title={`(LogoDSC) DSC Focus Graph`}
-        placement={"left"}
-        closable={true}
-        onClose={onClose}
-        open={open}
-        
-        footer={
-          <Button type='primary' onClick={() => {updateGraph()}}>Update Graph</Button> 
-        }
-      >
-        <List>
+    <div>
+        {/* <List>
           <List.Item
             actions={[<a onClick={() => signOut(auth)}>Sign Out</a>]}
           >
@@ -75,7 +64,7 @@ const AsideOptions = ({graphOptions, graphData, dataOptions, optionsModal}: IPro
               description={`logged in as ${loggedInUser?.email}`}
             />
           </List.Item>
-        </List>
+        </List> */}
         
         <Divider orientation="left">Create Node:</Divider>
         <Space direction="vertical">
@@ -92,8 +81,8 @@ const AsideOptions = ({graphOptions, graphData, dataOptions, optionsModal}: IPro
         <DataOptions
           dataOptions = {dataOptions}
         />
-      </Drawer>
-    </>
+        <Button type='primary' onClick={() => {updateGraph()}}>Update Graph</Button> 
+    </div>
   );
 };
 

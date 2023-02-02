@@ -54,8 +54,8 @@ function GraphCard({id, title, owner, lastModified, handleRenameGraphTitle, hand
         actions={[
           <Button onClick={showModal}>Rename</Button>,
           <Popconfirm
-            title="Delete the task"
-            description="Are you sure to delete this task?"
+            title="Delete the graph?"
+            description="Are you sure to delete this graph?"
             onConfirm={confirm}
             onCancel={cancel}
             okText="Yes"
@@ -68,7 +68,7 @@ function GraphCard({id, title, owner, lastModified, handleRenameGraphTitle, hand
         <Skeleton loading={loading} active>
           <div>ID: {id}</div>
           <div>Owner: {owner}</div>
-          <div>Last Modified: {new Date(lastModified.toDate()).toUTCString() || "Unknown"}</div>
+          <div>Last Modified: {lastModified?.toDate() && new Date(lastModified.toDate()).toUTCString()}</div>
         </Skeleton>
       </Card>
       <Modal

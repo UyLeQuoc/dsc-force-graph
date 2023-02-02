@@ -10,6 +10,7 @@ import {CSS2DRenderer, CSS2DObject} from 'three/examples/jsm/renderers/CSS2DRend
 import {UnrealBloomPass} from 'three/examples/jsm/postprocessing/UnrealBloomPass'
 import { v4 as uuidv4 } from 'uuid';
 import { IGraphInfo } from '../interfaces/index'
+import UIGraphController from "./UIGraphController";
 
 export default function BasicNodeChart({optionsModal, loggedInUser, graphID} : any) {
 	// Node Data State
@@ -284,32 +285,33 @@ export default function BasicNodeChart({optionsModal, loggedInUser, graphID} : a
 
   return (
 		<>
-		<h1>{graphInfoFirebase.owner}</h1>
-		<h1>{graphInfoFirebase.title}</h1>		
-			<AsideOptions
-				optionsModal = {optionsModal}
-				graphData={{
-					nodeName, setNodeName,
-					nodeGroup, setNodeGroup,
-					nodeValue, setNodeValue,
-				}}
-				dataOptions={{
-					addNode,
-					removeNode,
-					isLinkRemoving, setIsLinkRemoving,
-					isNodeRemoving, setIsNodeRemoving,
-					isLinking, setIsLinking,
-					activeLinking,
-					updateGraph
-				}}
-				graphOptions={{
-					enableFocusOnNode, setEnableFocusOnNode,
-					enableNodeDrag, setEnableNodeDrag,
-					enableShowLabels, setEnableShowLabels,
-					enableShowLinks, setEnableShowLinks,
-					enableShowDirected, setEnableShowDirected,
-				}}
-			/>
+			<UIGraphController graphInfoFirebase={graphInfoFirebase}>
+				<AsideOptions
+					optionsModal = {optionsModal}
+					graphData={{
+						nodeName, setNodeName,
+						nodeGroup, setNodeGroup,
+						nodeValue, setNodeValue,
+					}}
+					dataOptions={{
+						addNode,
+						removeNode,
+						isLinkRemoving, setIsLinkRemoving,
+						isNodeRemoving, setIsNodeRemoving,
+						isLinking, setIsLinking,
+						activeLinking,
+						updateGraph
+					}}
+					graphOptions={{
+						enableFocusOnNode, setEnableFocusOnNode,
+						enableNodeDrag, setEnableNodeDrag,
+						enableShowLabels, setEnableShowLabels,
+						enableShowLinks, setEnableShowLinks,
+						enableShowDirected, setEnableShowDirected,
+					}}
+				/>
+			</UIGraphController>
+			
 			<ForceGraph3D
 				extraRenderers={extraRenderers}
 				ref={fgRef}
@@ -360,12 +362,12 @@ export default function BasicNodeChart({optionsModal, loggedInUser, graphID} : a
 						}
 					>
 						<Space direction="vertical">
-							<div>ID: {modalNode.id}</div>
+							{/* <div>ID: {modalNode.id}</div>
 							<div>Name: {modalNode.name}</div>
 							<div>Group: {modalNode.group}</div>
 							<div>Color: {modalNode.color}</div>
 							<div>x: {modalNode.x}, y: {modalNode.y}. z: {modalNode.z}</div>
-							<div>vx: {modalNode.vx}, vy: {modalNode.vy}. vz: {modalNode.vz}</div>
+							<div>vx: {modalNode.vx}, vy: {modalNode.vy}. vz: {modalNode.vz}</div> */}
 							<ShowNote userID={loggedInUser.uid} noteID={`${modalNode.id}`} />
 						</Space>
 

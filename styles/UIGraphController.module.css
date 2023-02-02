@@ -1,0 +1,53 @@
+.controller_main{
+  background-color: white;
+  border-radius: 5px;
+  position: fixed;
+  height: 48px;
+  line-height: 48px;
+  padding: 0 10px;
+  top: 10px;
+  left: 10px;
+  z-index: 100;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+
+.controller{
+  z-index: 100;
+  position: relative;
+}
+.controller_graphs, .controller_graphs_open {
+  position: fixed;
+  top: 70px;
+  left: -600px;
+  bottom: 10px;
+  padding: 10px;
+  z-index: 2;
+  border-radius: 5px;
+  background-color: white;
+  transition: all 0.3s ease-in;
+  overflow-x: auto;
+  overflow-y: scroll;
+  padding: 10px;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+
+.controller_graphs_open{
+  left: 10px;
+}
+
+.controller_graphs_children{
+  width: 300px;
+  background-color: white;
+  border-radius: 5px;
+  padding: 10px;
+}
+.controller_toggle, .controller_toggle_open {
+  position: absolute;
+  top: calc(100vh - 40px);
+  left: 10px;
+  z-index: 200;
+  transition: all 0.3s ease-in;
+}
+.controller_toggle_open{
+  left: 350px;
+}

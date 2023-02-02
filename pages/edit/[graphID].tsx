@@ -23,12 +23,6 @@ export default function GraphID() : JSX.Element {
   };
 
   return <div className='overflow-hidden'>
-    <div className='fixed z-10 p-6'>
-			<Button type="primary" onClick={showDrawer}>
-        {open ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-      </Button>
-		</div>
-
     <FocusGraphWrapper optionsModal={{open, showDrawer, onClose}} loggedInUser={loggedInUser} graphID={graphID}/>
   </div>;
 }

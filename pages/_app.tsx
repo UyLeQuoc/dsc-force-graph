@@ -1,17 +1,12 @@
-import React from 'react'
-import { AppProps } from 'next/app'
+import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
+import { AppProps } from 'next/app';
+import { useEffect } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth, db } from '../utils/firebase'
 import Loading from '../components/Loading';
 import LoginPage from '../components/LoginPage';
-import { useEffect } from 'react';
-import { collection, doc, query, serverTimestamp, setDoc, where } from 'firebase/firestore';
-import { useCollection } from 'react-firebase-hooks/firestore';
+import { auth, db } from '../utils/firebase';
 
-import { gData } from '../datasets/data';
-
-import '../styles/index.css'
-import '../styles/login.css'
+import '../styles/index.css';
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [loggedInUser, loading, error] = useAuthState(auth);

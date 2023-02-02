@@ -58,7 +58,6 @@ export default function LoginPage() {
                   type="primary"
                   size="large"
                   onClick={signIn}
-                  className="signin-button"
                 >
                   Sign In With Google
                 </Button>
@@ -78,13 +77,11 @@ export default function LoginPage() {
               </Space>
             </Col>
             <Col span={6}>
-              <div className="hero-img">
-                <Image
-                  src={graphPreviewImage}
-                  alt="Preview of 3D Graph"
-                  style={imgStyle}
-                />
-              </div>
+              <Image
+                src={graphPreviewImage}
+                alt="Preview of 3D Graph"
+                style={imgStyle}
+              />
             </Col>
           </Row>
         </Content>

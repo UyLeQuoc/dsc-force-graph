@@ -24,7 +24,6 @@
     height: 70vh;
     justify-content: space-around;
     align-items: center;
-    font-family: Spoof, sans-serif;
 }
 
 .hero-action {
@@ -56,22 +55,6 @@
     width: 80%;
     margin-bottom: 3vh;
     font-size: 1.5vw;
-}
-
-.hero-action-social-links{
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
-    width: 100%;
-    font-size: 1.2vw;
-    font-weight: 400;
-}
-
-.hero-action-social-links a svg {
-    width: 4vh;
-    height: auto;
-    margin: 0.5vw;
 }
 
 .hero-img{

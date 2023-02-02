@@ -11,6 +11,7 @@ import { useCollection } from 'react-firebase-hooks/firestore';
 import { gData } from '../datasets/data';
 
 import '../styles/index.css'
+import '../styles/login.css'
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [loggedInUser, loading, error] = useAuthState(auth);

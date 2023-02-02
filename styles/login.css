@@ -1,0 +1,84 @@
+.login-container {
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+        align-items: center;
+    justify-content: center;
+}
+
+.logo {
+    background-color: lightcoral;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 10vw;
+    height: 10vh;
+}
+
+.hero {
+
+    display: flex;
+    flex-direction: row;
+    width: 70vw;
+    height: 70vh;
+    justify-content: space-around;
+    align-items: center;
+    font-family: Spoof, sans-serif;
+}
+
+.hero-action {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.hero-action-title {
+    font-size: 4vw;
+    font-weight: 700;
+    width: 100%;
+    margin-bottom: 3vh;
+}
+
+.hero-action-subtitle {
+    font-size: 1.5vw;
+    font-weight: 400;
+    color: rgb(5, 0, 56);
+    width: 100%;
+    margin-bottom: 5vh;
+}
+
+.signin-button {
+    border-radius: 32px;
+    width: 80%;
+    margin-bottom: 3vh;
+    font-size: 1.5vw;
+}
+
+.hero-action-social-links{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    font-size: 1.2vw;
+    font-weight: 400;
+}
+
+.hero-action-social-links a svg {
+    width: 4vh;
+    height: auto;
+    margin: 0.5vw;
+}
+
+.hero-img{
+    position: relative;
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}

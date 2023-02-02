@@ -9,6 +9,7 @@ type IProps = {
   owner: string;
   lastModified: any;
   handleRenameGraphTitle: (id: string, title: string) => void;
+  handleDeleteGraph: (id: string) => void;
 }
 function GraphCard({id, title, owner, lastModified, handleRenameGraphTitle, handleDeleteGraph}:IProps) : JSX.Element {
   const [loading, setLoading] = useState(false);

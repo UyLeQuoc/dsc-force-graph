@@ -187,7 +187,9 @@ export default function BasicNodeChart({optionsModal, loggedInUser, graphID} : a
 		graph: {
 			nodes: [],
 			links: [],
-		}
+		},
+		id: 'test',
+		lastModified: new Date(),
 	});
 	const [loading,setLoading] = useState<boolean>(true);
 
@@ -207,7 +209,16 @@ export default function BasicNodeChart({optionsModal, loggedInUser, graphID} : a
 		const graphInfoRef = doc(db,'graphs', graphID);
 		const graphInfoSnap = await getDoc(graphInfoRef);
 		if (graphInfoSnap.exists()) {
-			setGraphInfoFirebase(graphInfoSnap.data());
+			setGraphInfoFirebase({
+				title: graphInfoSnap.data().title,
+				owner: graphInfoSnap.data().owner,
+				graph: {
+					nodes: graphInfoSnap.data().graph?.nodes,
+					links: graphInfoSnap.data().graph?.links,
+				},
+				id: graphInfoSnap.data().id,
+				lastModified: graphInfoSnap.data().lastModified,
+			});
 			setGraphData({
 				nodes: graphInfoSnap.data().graph?.nodes,
 				links: graphInfoSnap.data().graph?.links,

@@ -16,5 +16,6 @@ export type IGraphInfo = {
 	title: string;
 	graph: GraphData;
 	owner: string;
-  lastModified: Timestamp;
+  lastModified: any;
+  id: string;
 }

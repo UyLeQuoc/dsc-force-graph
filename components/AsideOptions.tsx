@@ -1,10 +1,7 @@
-import { Dispatch, SetStateAction, useState } from 'react';
-import { Avatar, Button, Divider, Drawer, Input, List, Radio, Space, Typography } from 'antd';
-import GraphOptions from './GraphOptions';
+import { Button, Divider, Input, Space, Typography } from 'antd';
+import { Dispatch, SetStateAction } from 'react';
 import DataOptions from './DataOptions';
-import { auth } from '../utils/firebase';
-import { signOut } from 'firebase/auth';
-import { useAuthState } from 'react-firebase-hooks/auth';
+import GraphOptions from './GraphOptions';
 
 type IProps = {
   graphData: {
@@ -12,8 +9,6 @@ type IProps = {
     setNodeName: Dispatch<SetStateAction<string>>;
     nodeGroup: string;
     setNodeGroup: Dispatch<SetStateAction<string>>;
-    nodeValue: number;
-    setNodeValue: Dispatch<SetStateAction<number>>;
   };
   graphOptions: {
     enableFocusOnNode: boolean;
@@ -34,23 +29,14 @@ type IProps = {
     isNodeRemoving: boolean; setIsNodeRemoving: Dispatch<SetStateAction<boolean>>;
     isLinking: boolean; setIsLinking: Dispatch<SetStateAction<boolean>>;
     activeLinking: () => void;
-    updateGraph: () => void;
   };
-  optionsModal: {
-    open: boolean;
-    onClose: () => void;
-  }
 }
 
-const AsideOptions = ({graphOptions, graphData, dataOptions, optionsModal}: IProps) => {
-  const [loggedInUser, _loading, _error] = useAuthState(auth);
-
+const AsideOptions = ({graphOptions, graphData, dataOptions}: IProps) => {
   // Node Data State
-  const {nodeName, setNodeName, nodeGroup, setNodeGroup, nodeValue, setNodeValue} = graphData;
+  const {nodeName, setNodeName, nodeGroup, setNodeGroup} = graphData;
   // Data Options State
-  const {addNode, removeNode, isLinkRemoving, setIsLinkRemoving, isNodeRemoving, setIsNodeRemoving, activeLinking, updateGraph} = dataOptions;
-  const {open, onClose} = optionsModal;
-
+  const {addNode} = dataOptions;
 
   return (
     <div>
@@ -65,7 +51,6 @@ const AsideOptions = ({graphOptions, graphData, dataOptions, optionsModal}: IPro
             />
           </List.Item>
         </List> */}
-        
         <Divider orientation="left">Create Node:</Divider>
         <Space direction="vertical">
           <Typography.Text>Node Name</Typography.Text>
@@ -81,7 +66,7 @@ const AsideOptions = ({graphOptions, graphData, dataOptions, optionsModal}: IPro
         <DataOptions
           dataOptions = {dataOptions}
         />
-        <Button type='primary' onClick={() => {updateGraph()}}>Update Graph</Button> 
+        <Divider orientation="left">Update Graph:</Divider>
     </div>
   );
 };

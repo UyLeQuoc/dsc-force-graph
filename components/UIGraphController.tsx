@@ -1,9 +1,17 @@
-import { Button, Divider, Typography } from 'antd'
+import { Avatar, Button, Divider, Dropdown, MenuProps, Space, Typography } from 'antd'
 import React from 'react'
 import styles from '../styles/UIGraphController.module.css'
-import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
+import { MenuUnfoldOutlined, MenuFoldOutlined, LogoutOutlined } from '@ant-design/icons';
+import { signOut } from 'firebase/auth';
+import { auth } from '../utils/firebase';
+type IProps = {
+  graphInfoFirebase: any;
+  children: React.ReactNode;
+  loggedInUser: any;
+  updateGraph: () => void;
+}
 
-function UIGraphController({graphInfoFirebase, children} : any) : JSX.Element{
+function UIGraphController({graphInfoFirebase, children, loggedInUser, updateGraph} : IProps) : JSX.Element{
   const [isOpened, setIsOpened] = React.useState<boolean>(true)
   function handleOpen() {
     setIsOpened(!isOpened)
@@ -16,7 +24,27 @@ function UIGraphController({graphInfoFirebase, children} : any) : JSX.Element{
         <Divider type='vertical'/>
         <Typography.Text>{graphInfoFirebase.title}</Typography.Text>
         <Divider type='vertical'/>
-        <Typography.Text>{graphInfoFirebase.owner}</Typography.Text>
+        <Dropdown menu={
+          {
+            items: [
+              {
+                key: '1',
+                label: (
+                  <div onClick={() => signOut(auth)}>
+                    Log out
+                  </div>
+                ),
+                icon: <LogoutOutlined />,
+              },
+            ]
+          }
+        }>
+          <Space>
+            <Avatar size="default" src={loggedInUser.photoURL}/>
+          </Space>
+        </Dropdown>
+        <Divider type='vertical'/>
+        <Button type='primary' onClick={updateGraph}>Save Graph</Button>
         <Divider type='vertical'/>
         <Button type='primary'>Share</Button>
       </div>

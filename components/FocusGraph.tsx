@@ -12,7 +12,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { IGraphInfo } from '../interfaces/index'
 import UIGraphController from "./UIGraphController";
 
-export default function BasicNodeChart({optionsModal, loggedInUser, graphID} : any) {
+export default function BasicNodeChart({loggedInUser, graphID} : any) {
 	// Node Data State
   const [nodeName, setNodeName] = useState<string>('');
 	const [nodeGroup, setNodeGroup] = useState<string>('');
@@ -95,24 +95,6 @@ export default function BasicNodeChart({optionsModal, loggedInUser, graphID} : a
 		if (isLinkRemoving) return removeLink(link);
 	}
 
-	const getGraphFilterAttribute = (graph: GraphData) => {
-		return {
-			nodes: graph.nodes.map((node : NodeObject | any) => {
-				return {
-					id: node.id,
-					name: 'test',
-					group: node.group,
-				}
-			}),
-			links: graphData.links.map((link : LinkObject | any) => {
-				return {
-					source: link.source.id,
-					target: link.target.id,
-					value: link.value,
-				}
-			})
-		}
-	}
   const handleNodeClick = (node: NodeObject | any) => {
 		 console.log('nodeToLink: ', nodeToLink)
 			if (isNodeRemoving) return removeNode(node);
@@ -285,13 +267,11 @@ export default function BasicNodeChart({optionsModal, loggedInUser, graphID} : a
 
   return (
 		<>
-			<UIGraphController graphInfoFirebase={graphInfoFirebase}>
+			<UIGraphController graphInfoFirebase={graphInfoFirebase} loggedInUser={loggedInUser} updateGraph={updateGraph}>
 				<AsideOptions
-					optionsModal = {optionsModal}
 					graphData={{
 						nodeName, setNodeName,
 						nodeGroup, setNodeGroup,
-						nodeValue, setNodeValue,
 					}}
 					dataOptions={{
 						addNode,
@@ -299,8 +279,7 @@ export default function BasicNodeChart({optionsModal, loggedInUser, graphID} : a
 						isLinkRemoving, setIsLinkRemoving,
 						isNodeRemoving, setIsNodeRemoving,
 						isLinking, setIsLinking,
-						activeLinking,
-						updateGraph
+						activeLinking
 					}}
 					graphOptions={{
 						enableFocusOnNode, setEnableFocusOnNode,

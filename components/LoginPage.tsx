@@ -3,8 +3,8 @@ import { Button, Col, Layout, Row, Space, Typography } from "antd";
 import Image from "next/image";
 import Link from "next/link";
 import { useSignInWithGoogle } from "react-firebase-hooks/auth";
-import Logo from "../public/icons/DSC_LOGO.png";
-import graphPreviewImage from "../public/icons/login-graph-preview.png";
+import Logo from "../public/logo/DSC_LOGO.png";
+import graphPreviewImage from "../public/logo/login-graph-preview.png";
 import { auth } from "../utils/firebase";
 
 const { Header, Footer, Content } = Layout;

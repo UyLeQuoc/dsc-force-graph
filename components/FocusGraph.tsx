@@ -1,4 +1,4 @@
-import { Button, Drawer, message, Popconfirm, Space } from "antd";
+import { Button, Drawer, message, notification, Popconfirm, Space } from "antd";
 import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
@@ -120,12 +120,18 @@ export default function BasicNodeChart({loggedInUser, graphID} : any) {
 			}
 			if (isLinking && !nodeToLink) {
 				setNodeToLink(node);
+				notification.info({
+					key: 'linking-mode',
+					message: 'Linking Mode',
+					description: 'Click on target node to link',
+				})
 				return;
 			}
 	
 			else if (nodeToLink) {
 				if (node === nodeToLink) {
 					setNodeToLink(null);
+					notification.destroy('linking-mode');
 					return;
 				}
 	
@@ -156,10 +162,17 @@ export default function BasicNodeChart({loggedInUser, graphID} : any) {
 		if(isLinking){
 			setIsLinking(false);
 			setNodeToLink(null);
+			notification.destroy('linking-mode');
 			return;
 		}
 		if (!isNodeRemoving && !isLinkRemoving && !isLinking) {
 			setIsLinking(true);
+			notification.destroy('linking-mode');
+			notification.info({
+				key: 'linking-mode',
+				message: 'Linking Mode',
+				description: 'Click on source node to link',
+			})
 		}
 	}
 

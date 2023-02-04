@@ -4,6 +4,11 @@ import styles from '../styles/UIGraphController.module.css'
 import { MenuUnfoldOutlined, MenuFoldOutlined, LogoutOutlined } from '@ant-design/icons';
 import { signOut } from 'firebase/auth';
 import { auth } from '../utils/firebase';
+import InformationGraphModal from './ControllerModal/InformationGraphModal';
+import ShareGraphModal from './ControllerModal/ShareGraphModal';
+import Image from 'next/image';
+import LogoIcon from '../public/logo/DSC_LOGO.png'
+
 type IProps = {
   graphInfoFirebase: any;
   children: React.ReactNode;
@@ -20,9 +25,13 @@ function UIGraphController({graphInfoFirebase, children, loggedInUser, updateGra
   return (
     <>
       <div className={styles.controller_main}>
-        <Typography.Text>DSC Logo</Typography.Text>
+          {/* <Image
+            src={LogoIcon} alt="DSC FPTU"
+
+          /> */}
+          {/* <Typography.Text>DSC FPTU</Typography.Text> */}
         <Divider type='vertical'/>
-        <Typography.Text>{graphInfoFirebase.title}</Typography.Text>
+          <InformationGraphModal graphInfoFirebase={graphInfoFirebase} />
         <Divider type='vertical'/>
         <Dropdown menu={
           {
@@ -46,7 +55,7 @@ function UIGraphController({graphInfoFirebase, children, loggedInUser, updateGra
         <Divider type='vertical'/>
         <Button type='primary' onClick={updateGraph}>Save Graph</Button>
         <Divider type='vertical'/>
-        <Button type='primary'>Share</Button>
+        <ShareGraphModal graphInfoFirebase={graphInfoFirebase} />
       </div>
       
       <div className={styles.controller}>

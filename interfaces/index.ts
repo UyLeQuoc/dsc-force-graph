@@ -18,4 +18,6 @@ export type IGraphInfo = {
 	owner: string;
   lastModified: any;
   id: string;
+  // description: string;
+  // tags: string[];
 }

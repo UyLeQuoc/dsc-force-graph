@@ -1,15 +1,15 @@
 import { Button, Drawer, message, Popconfirm, Space } from "antd";
+import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
+import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
-import ForceGraph3D, { ForceGraphMethods, GraphData, NodeObject, LinkObject } from "react-force-graph-3d";
-import { doc, getDoc, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
+import ForceGraph3D, { ForceGraphMethods, GraphData, LinkObject, NodeObject } from "react-force-graph-3d";
+import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass';
+import { CSS2DObject, CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
+import { v4 as uuidv4 } from 'uuid';
+import { IGraphInfo } from '../interfaces/index';
 import { db } from "../utils/firebase";
 import AsideOptions from "./AsideOptions";
-import { useRouter } from "next/router";
 import ShowNote from "./ShowNote";
-import {CSS2DRenderer, CSS2DObject} from 'three/examples/jsm/renderers/CSS2DRenderer.js'
-import {UnrealBloomPass} from 'three/examples/jsm/postprocessing/UnrealBloomPass'
-import { v4 as uuidv4 } from 'uuid';
-import { IGraphInfo } from '../interfaces/index'
 import UIGraphController from "./UIGraphController";
 
 export default function BasicNodeChart({loggedInUser, graphID} : any) {

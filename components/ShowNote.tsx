@@ -17,7 +17,6 @@ function ShowNote({userID, noteID} : {userID: string, noteID: string}) {
 		const noteRef = doc(db, `${userID}`, `${noteID}`);
 		const noteSnap = await getDoc(noteRef);
 		if (noteSnap.exists()) {
-			console.log('note data: ', noteSnap.data());
 			setNoteFirebase(noteSnap.data())
 		} else {
 			// doc.data() will be undefined in this case

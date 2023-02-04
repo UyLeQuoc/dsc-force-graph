@@ -66,7 +66,6 @@ const AsideOptions = ({graphOptions, graphData, dataOptions}: IProps) => {
         <DataOptions
           dataOptions = {dataOptions}
         />
-        <Divider orientation="left">Update Graph:</Divider>
     </div>
   );
 };

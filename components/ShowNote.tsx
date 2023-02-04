@@ -1,20 +1,20 @@
-import { Empty, message } from 'antd';
+import { Col, Empty, message, Row, Skeleton } from 'antd';
 import { doc, getDoc } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import { db } from '../utils/firebase';
 import Editor from './Editor';
 
-function ShowNote({userID, noteID} : {userID: string, noteID: string}) {
+function ShowNote({graphID, noteID} : {graphID: string, noteID: string}) {
 	// firebase
 	const [noteFirebase,setNoteFirebase] = useState<any>();
 	const [loading,setLoading] = useState<boolean>(true);
 	const [isEmpty, setIsEmpty] = useState<boolean>(false);
 	console.log('noteFirebase',noteFirebase, loading);
 
-	const getNoteFromFirebase = async (userID, noteID) => {
-		if(!userID || !noteID) return;
-		console.log("render ShowNote", userID, noteID)
-		const noteRef = doc(db, `${userID}`, `${noteID}`);
+	const getNoteFromFirebase = async (graphID, noteID) => {
+		if(!graphID || !noteID) return;
+		console.log("render ShowNote", graphID, noteID)
+		const noteRef = doc(db,`${graphID}`, `${noteID}`);
 		const noteSnap = await getDoc(noteRef);
 		if (noteSnap.exists()) {
 			setNoteFirebase(noteSnap.data())
@@ -26,7 +26,7 @@ function ShowNote({userID, noteID} : {userID: string, noteID: string}) {
  	};
  
 	useEffect( () => {
-			getNoteFromFirebase(userID, noteID);
+			getNoteFromFirebase(graphID, noteID);
 			// reset loading
 			setTimeout(() => {
 				setLoading(false);
@@ -43,9 +43,15 @@ function ShowNote({userID, noteID} : {userID: string, noteID: string}) {
     <>
       {
 				isEmpty ? (
-					<Empty />
+					<Row align="middle" style={{height: '100%'}}>
+						<Col span={24}>
+							<Empty description="No Note Found" />
+						</Col>
+					</Row>
 				) : (
-					<Editor noteFirebase={noteFirebase} loading={loading} isReadable={true} updateNote={undefined} />
+					<Skeleton loading={loading} active>
+						<Editor noteFirebase={noteFirebase} loading={loading} isReadable={true} updateNote={undefined} />
+					</Skeleton>
 				)
 			}
     </>

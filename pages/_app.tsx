@@ -7,6 +7,7 @@ import LoginPage from '../components/LoginPage';
 import { auth, db } from '../utils/firebase';
 
 import '../styles/index.css';
+import { useRouter } from 'next/router';
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [loggedInUser, loading, error] = useAuthState(auth);
@@ -48,11 +49,16 @@ function MyApp({ Component, pageProps }: AppProps) {
   }
   , [loggedInUser])
 
-  
+  const { asPath } = useRouter();
+  const cleanPath = asPath.split('#')[0].split('?')[0];
+  console.log("CLEAN PATH", cleanPath.slice(1,5))
 
   if (loading) return <Loading />
-  
-  if (!loggedInUser) return <LoginPage />
+
+  if(cleanPath.slice(1,5) !== 'view') {
+    if (!loggedInUser) return <LoginPage />
+
+  }
 
   return <Component {...pageProps} />
 }

@@ -1,5 +1,6 @@
 import { Button, Drawer, message, notification, Popconfirm, Space } from "antd";
 import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import ForceGraph3D, { ForceGraphMethods, GraphData, LinkObject, NodeObject } from "react-force-graph-3d";
@@ -13,6 +14,8 @@ import ShowNote from "./ShowNote";
 import UIGraphController from "./UIGraphController";
 
 export default function BasicNodeChart({loggedInUser, graphID} : any) {
+	const [isViewer, setIsViewer] = useState(true);
+
 	// Node Data State
   const [nodeName, setNodeName] = useState<string>('');
 	const [nodeGroup, setNodeGroup] = useState<string>('');
@@ -207,6 +210,18 @@ export default function BasicNodeChart({loggedInUser, graphID} : any) {
 		id: 'test',
 		lastModified: new Date(),
 	});
+
+	// Check if user is viewer or editor
+	useEffect(() => {
+		if(!loggedInUser){
+			setIsViewer(true);
+		}else{
+			if(loggedInUser.uid === graphInfoFirebase.owner){
+				setIsViewer(false);
+			}
+		}
+	},[loggedInUser, graphInfoFirebase])
+
 	const [loading,setLoading] = useState<boolean>(true);
 
 	const getUserFromFirebase = async () => {
@@ -239,12 +254,14 @@ export default function BasicNodeChart({loggedInUser, graphID} : any) {
 				nodes: graphInfoSnap.data().graph?.nodes,
 				links: graphInfoSnap.data().graph?.links,
 			} || {nodes:[],links:[]});
+		} else {
+			message.error('No such document!');
+			router.push('/workspace');
 		}
  	};
  
 	 const updateGraph = async () => {
 		const graphRef = doc(db,'graphs', graphID);
-
 		const output = {
 			graph: {
 				links: graphData.links.map((link : any) => {
@@ -295,10 +312,10 @@ export default function BasicNodeChart({loggedInUser, graphID} : any) {
 	const extraRenderers = [new CSS2DRenderer()];
 	
 
-
   return (
 		<>
-			<UIGraphController graphInfoFirebase={graphInfoFirebase} loggedInUser={loggedInUser} updateGraph={updateGraph}>
+			{/* <h1>{isViewer ? 'Viewer' : 'Editor'}</h1> */}
+			<UIGraphController graphInfoFirebase={graphInfoFirebase} loggedInUser={loggedInUser} updateGraph={updateGraph} isViewer={isViewer}>
 				<AsideOptions
 					graphData={{
 						nodeName, setNodeName,
@@ -319,9 +336,9 @@ export default function BasicNodeChart({loggedInUser, graphID} : any) {
 						enableShowLinks, setEnableShowLinks,
 						enableShowDirected, setEnableShowDirected,
 					}}
+					isViewer={isViewer}
 				/>
 			</UIGraphController>
-			
 			<ForceGraph3D
 				extraRenderers={extraRenderers}
 				ref={fgRef}
@@ -339,7 +356,6 @@ export default function BasicNodeChart({loggedInUser, graphID} : any) {
 					return new CSS2DObject(nodeEl);
 				}}
 				nodeThreeObjectExtend={true}
-				
 				linkDirectionalParticles="value"
         linkDirectionalParticleSpeed={(d : any ) => d?.value * 0.001}
 				// Graph options
@@ -357,30 +373,38 @@ export default function BasicNodeChart({loggedInUser, graphID} : any) {
 						onClose={onClose}
 						open={open}
 						extra={
-							<Space>
-								<Popconfirm
-									title="Delete the node"
-									description="Are you sure to delete this node?"
-									onConfirm={confirm}
-									okText="Yes"
-									cancelText="No"
-								>
-									<Button>Delete</Button>
-								</Popconfirm>
-							<Button type="primary" onClick={() => router.push(`/${loggedInUser.uid}/${modalNode.id}`)}>View</Button>
-							</Space>
+							isViewer || (
+								<Space>
+									<Popconfirm
+										title="Delete the node"
+										description="Are you sure to delete this node?"
+										onConfirm={confirm}
+										okText="Yes"
+										cancelText="No"
+									>
+										<Button type="primary" danger>Delete</Button>
+									</Popconfirm>
+									<Button type="primary">
+										<Link 
+											href={`/${graphInfoFirebase.id}/${modalNode.id}`} 
+											rel="noopener noreferrer" 
+											target="_blank"
+											style={{color: 'white'}}
+										>
+												View
+										</Link>
+									</Button>
+								</Space>
+								)
 						}
 					>
-						<Space direction="vertical">
 							{/* <div>ID: {modalNode.id}</div>
 							<div>Name: {modalNode.name}</div>
 							<div>Group: {modalNode.group}</div>
 							<div>Color: {modalNode.color}</div>
 							<div>x: {modalNode.x}, y: {modalNode.y}. z: {modalNode.z}</div>
 							<div>vx: {modalNode.vx}, vy: {modalNode.vy}. vz: {modalNode.vz}</div> */}
-							<ShowNote userID={loggedInUser.uid} noteID={`${modalNode.id}`} />
-						</Space>
-
+							<ShowNote graphID={graphInfoFirebase.id} noteID={`${modalNode.id}`} />
 					</Drawer>
 				)
 			}

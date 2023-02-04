@@ -6,7 +6,7 @@ import { signOut } from 'firebase/auth';
 import { auth } from '../utils/firebase';
 import InformationGraphModal from './ControllerModal/InformationGraphModal';
 import ShareGraphModal from './ControllerModal/ShareGraphModal';
-import Image from 'next/image';
+import Link from 'next/link';
 import LogoIcon from '../public/logo/DSC_LOGO.png'
 
 type IProps = {
@@ -14,9 +14,10 @@ type IProps = {
   children: React.ReactNode;
   loggedInUser: any;
   updateGraph: () => void;
+  isViewer: boolean;
 }
 
-function UIGraphController({graphInfoFirebase, children, loggedInUser, updateGraph} : IProps) : JSX.Element{
+function UIGraphController({graphInfoFirebase, children, loggedInUser, updateGraph, isViewer} : IProps) : JSX.Element{
   const [isOpened, setIsOpened] = React.useState<boolean>(true)
   function handleOpen() {
     setIsOpened(!isOpened)
@@ -27,9 +28,9 @@ function UIGraphController({graphInfoFirebase, children, loggedInUser, updateGra
       <div className={styles.controller_main}>
           {/* <Image
             src={LogoIcon} alt="DSC FPTU"
-
+      
           /> */}
-          {/* <Typography.Text>DSC FPTU</Typography.Text> */}
+          <Link href="/workspace">DSC FPTU</Link>
         <Divider type='vertical'/>
           <InformationGraphModal graphInfoFirebase={graphInfoFirebase} />
         <Divider type='vertical'/>
@@ -49,11 +50,18 @@ function UIGraphController({graphInfoFirebase, children, loggedInUser, updateGra
           }
         }>
           <Space>
-            <Avatar size="default" src={loggedInUser.photoURL}/>
+            <Avatar size="default" src={loggedInUser != null ? loggedInUser.photoURL : "DSC"}/>
           </Space>
         </Dropdown>
-        <Divider type='vertical'/>
-        <Button type='primary' onClick={updateGraph}>Save Graph</Button>
+        {
+          isViewer ? null : (
+            <>
+              <Divider type='vertical'/>
+              <Button type='primary' onClick={updateGraph}>Save Graph</Button>
+            </>
+          )
+        }
+        
         <Divider type='vertical'/>
         <ShareGraphModal graphInfoFirebase={graphInfoFirebase} />
       </div>

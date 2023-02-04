@@ -1,13 +1,10 @@
 import { Empty, message } from 'antd';
 import { doc, getDoc } from 'firebase/firestore';
-import React, { useEffect, useState } from 'react'
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth, db } from '../utils/firebase';
+import { useEffect, useState } from 'react';
+import { db } from '../utils/firebase';
 import Editor from './Editor';
 
 function ShowNote({userID, noteID} : {userID: string, noteID: string}) {
-  
-
 	// firebase
 	const [noteFirebase,setNoteFirebase] = useState<any>();
 	const [loading,setLoading] = useState<boolean>(true);

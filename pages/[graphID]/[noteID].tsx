@@ -11,7 +11,7 @@ import { auth, db } from '../../utils/firebase';
 function App() {
 	// read slug nextjs
 	const { query } = useRouter();
-	const { userID, noteID } = query;
+	const { graphID, noteID } = query;
 
 	const [loggedInUser, _loading, _error] = useAuthState(auth);
 
@@ -20,19 +20,19 @@ function App() {
 	const [loading,setLoading] = useState<boolean>(true);
 
 	const getNoteFromFirebase = async () => {
-		const noteRef = doc(db, `${userID}`, `${noteID}`);
+		const noteRef = doc(db, `${graphID}`, `${noteID}`);
 		const noteSnap = await getDoc(noteRef);
 		if (noteSnap.exists()) {
 			setNoteFirebase(noteSnap.data())
 		} else {
 			// doc.data() will be undefined in this case
 			alert('No such document!');
-			createNote(userID, noteID);
+			createNote(graphID, noteID);
 		}
  	};
  
-	const createNote = async (userID, noteID) => {
-		const noteRef = doc(db,userID, noteID);
+	const createNote = async (graphID, noteID) => {
+		const noteRef = doc(db,graphID, noteID);
 		const data = {
 			content: '<h1>Start typing...</h1>',
 			timestamp: serverTimestamp()
@@ -43,7 +43,7 @@ function App() {
 	}
 
 	const updateNote = async (content) => {
-		const noteRef = doc(db, `${userID}`, `${noteID}`);
+		const noteRef = doc(db, `${graphID}`, `${noteID}`);
 		const data = {
 			content: content,
 			timestamp: serverTimestamp()
@@ -52,7 +52,7 @@ function App() {
 		message.success('Note updated!');
 	}
 	useEffect( () => {
-			if(userID && noteID) {
+			if(graphID && noteID) {
 				getNoteFromFirebase();
 			}
 			// reset loading

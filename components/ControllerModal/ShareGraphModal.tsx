@@ -29,7 +29,7 @@ function InformationGraphModal({graphInfoFirebase}: IProps) {
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(URL+"/view/"+graphInfoFirebase.id);
-    message.success("Link copied to clipboard");
+    message.success("Link copied to clipboard", 3);
   }
 
   return (

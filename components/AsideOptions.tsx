@@ -30,9 +30,10 @@ type IProps = {
     isLinking: boolean; setIsLinking: Dispatch<SetStateAction<boolean>>;
     activeLinking: () => void;
   };
+  isViewer: boolean;
 }
 
-const AsideOptions = ({graphOptions, graphData, dataOptions}: IProps) => {
+const AsideOptions = ({graphOptions, graphData, dataOptions, isViewer}: IProps) => {
   // Node Data State
   const {nodeName, setNodeName, nodeGroup, setNodeGroup} = graphData;
   // Data Options State
@@ -51,21 +52,27 @@ const AsideOptions = ({graphOptions, graphData, dataOptions}: IProps) => {
             />
           </List.Item>
         </List> */}
-        <Divider orientation="left">Create Node:</Divider>
-        <Space direction="vertical">
-          <Typography.Text>Node Name</Typography.Text>
-          <Input placeholder="Node Name" value={nodeName} onChange={(e) => setNodeName(e.target.value)}/>
-          <Typography.Text>Node Group</Typography.Text>
-          <Input placeholder="Node Group" value={nodeGroup} onChange={(e) => setNodeGroup(e.target.value)}/>
-          <Button type="primary" onClick={addNode}>Create</Button>
-        </Space>
-
+        {
+          isViewer ? null : (
+            <>
+              <Divider orientation="left">Create Node:</Divider>
+              <Space direction="vertical">
+                <Typography.Text>Node Name</Typography.Text>
+                <Input placeholder="Node Name" value={nodeName} onChange={(e) => setNodeName(e.target.value)}/>
+                <Typography.Text>Node Group</Typography.Text>
+                <Input placeholder="Node Group" value={nodeGroup} onChange={(e) => setNodeGroup(e.target.value)}/>
+                <Button type="primary" onClick={addNode}>Create</Button>
+              </Space>
+              <DataOptions
+                dataOptions = {dataOptions}
+              />
+            </>
+          )
+        }
         <GraphOptions
           graphOptions = {graphOptions}
         />
-        <DataOptions
-          dataOptions = {dataOptions}
-        />
+        
     </div>
   );
 };

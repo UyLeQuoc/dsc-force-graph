@@ -42,7 +42,6 @@ function GraphCard({id, title, owner, lastModified, handleRenameGraphTitle, hand
   };
   
   const cancel = (e: React.MouseEvent<HTMLElement>) => {
-    console.log(e);
     message.error('Click on No');
   };
 

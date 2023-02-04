@@ -14,18 +14,15 @@ function App() {
 	const { userID, noteID } = query;
 
 	const [loggedInUser, _loading, _error] = useAuthState(auth);
-	console.log( userID, noteID)
 
 	// firebase
 	const [noteFirebase,setNoteFirebase] = useState<any>();
 	const [loading,setLoading] = useState<boolean>(true);
-	console.log('noteFirebase',noteFirebase);
 
 	const getNoteFromFirebase = async () => {
 		const noteRef = doc(db, `${userID}`, `${noteID}`);
 		const noteSnap = await getDoc(noteRef);
 		if (noteSnap.exists()) {
-			console.log('note data: ', noteSnap.data());
 			setNoteFirebase(noteSnap.data())
 		} else {
 			// doc.data() will be undefined in this case

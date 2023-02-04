@@ -37,6 +37,28 @@ export default function BasicNodeChart({loggedInUser, graphID} : any) {
 
 	const router = useRouter();
 
+	if(isNodeRemoving){
+		notification.info({
+			key: 'remove-node-mode',
+			message: 'Remove Node Mode',
+			description: 'Click on node to remove',
+			duration: 0,
+		})
+	} else{
+		notification.destroy('remove-node-mode');
+	}
+
+	if(isLinkRemoving){
+		notification.info({
+			key: 'remove-link-mode',
+			message: 'Remove Link Mode',
+			description: 'Click on link to remove',
+			duration: 0,
+		})
+	}	else{
+		notification.destroy('remove-link-mode');
+	}
+
   const addNode = () => {
 		if(!nodeName || !nodeGroup) return message.error('Node name and Node Group is required');
 
@@ -63,8 +85,6 @@ export default function BasicNodeChart({loggedInUser, graphID} : any) {
 		dataToUpdate.nodes = updateNode;
 		dataToUpdate.links = updateLinks;
 		message.success('Removed node: ' + node.id + ' sucessfully');
-
-		console.log('After remove', dataToUpdate);
 		setGraphData(dataToUpdate);
 	}
 
@@ -80,7 +100,6 @@ export default function BasicNodeChart({loggedInUser, graphID} : any) {
 	const [modalNode, setModalNode] = useState<NodeObject | any>(null);
 	const [open, setOpen] = useState(false);
 
-	console.log('graphData testing', graphData);
   const showDrawer = (node) => {
 		setModalNode(node);
     setOpen(true);
@@ -91,18 +110,18 @@ export default function BasicNodeChart({loggedInUser, graphID} : any) {
   };
 
 	const handleLinkClick = (link) => {
-		console.log('On Link Click: ', link);
 		if (isLinkRemoving) return removeLink(link);
 	}
 
   const handleNodeClick = (node: NodeObject | any) => {
-		 console.log('nodeToLink: ', nodeToLink)
-			if (isNodeRemoving) return removeNode(node);
+			if (isNodeRemoving){
+				removeNode(node);
+				return;
+			}
       if(!isNodeRemoving && enableFocusOnNode && !isLinkRemoving && !isLinking){
 				const distance = 80;
 				const distRatio = 1 + distance / Math.hypot(node.x, node.y, node.z);
 				if (fgRef.current) {
-					console.log(fgRef.current, "Node", node);
 					fgRef.current.cameraPosition(
 						{
 							x: node.x * distRatio,
@@ -124,6 +143,7 @@ export default function BasicNodeChart({loggedInUser, graphID} : any) {
 					key: 'linking-mode',
 					message: 'Linking Mode',
 					description: 'Click on target node to link',
+					duration: 0,
 				})
 				return;
 			}
@@ -141,7 +161,6 @@ export default function BasicNodeChart({loggedInUser, graphID} : any) {
 				let isDuplicateLink = () => {
 					let isDuplicate = false;
 					updateData.links.forEach(link => {
-						console.log(link.source, newLink.source, link.target, newLink.target);
 						if (link.source.id === newLink.source && link.target.id === newLink.target) {
 							isDuplicate = true;
 						}
@@ -172,6 +191,7 @@ export default function BasicNodeChart({loggedInUser, graphID} : any) {
 				key: 'linking-mode',
 				message: 'Linking Mode',
 				description: 'Click on source node to link',
+				duration: 0,
 			})
 		}
 	}
@@ -244,7 +264,6 @@ export default function BasicNodeChart({loggedInUser, graphID} : any) {
 			},
 			lastModified: serverTimestamp(),
 		}
-		console.log('data',output)
 
 		await setDoc(graphRef, output, { merge: true });
 		message.success('Graph updated!');
@@ -265,7 +284,6 @@ export default function BasicNodeChart({loggedInUser, graphID} : any) {
 			
 			// bloom effect
 			const bloomPass = new UnrealBloomPass();
-			console.log('bloomPass',bloomPass);
 			bloomPass.strength = 1;
 			bloomPass.radius = 1;
 			bloomPass.threshold = 0.1;

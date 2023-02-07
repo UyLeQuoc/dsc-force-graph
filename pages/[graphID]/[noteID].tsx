@@ -20,7 +20,7 @@ function App() {
 	const [loading,setLoading] = useState<boolean>(true);
 
 	const getNoteFromFirebase = async () => {
-		const noteRef = doc(db, `${graphID}`, `${noteID}`);
+		const noteRef = doc(db, 'graphs', `${graphID}`, 'notes' ,`${noteID}`);
 		const noteSnap = await getDoc(noteRef);
 		if (noteSnap.exists()) {
 			setNoteFirebase(noteSnap.data())
@@ -32,7 +32,7 @@ function App() {
  	};
  
 	const createNote = async (graphID, noteID) => {
-		const noteRef = doc(db,graphID, noteID);
+		const noteRef = doc(db, 'graphs', `${graphID}`, 'notes' ,`${noteID}`);
 		const data = {
 			content: '<h1>Start typing...</h1>',
 			timestamp: serverTimestamp()
@@ -43,7 +43,7 @@ function App() {
 	}
 
 	const updateNote = async (content) => {
-		const noteRef = doc(db, `${graphID}`, `${noteID}`);
+		const noteRef = doc(db, 'graphs', `${graphID}`, 'notes' ,`${noteID}`);
 		const data = {
 			content: content,
 			timestamp: serverTimestamp()

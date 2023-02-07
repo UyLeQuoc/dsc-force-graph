@@ -41,17 +41,6 @@ const AsideOptions = ({graphOptions, graphData, dataOptions, isViewer}: IProps) 
 
   return (
     <div>
-        {/* <List>
-          <List.Item
-            actions={[<a onClick={() => signOut(auth)}>Sign Out</a>]}
-          >
-            <List.Item.Meta
-              avatar={<Avatar src={loggedInUser?.photoURL} />}
-              title={<h4>{loggedInUser?.displayName}</h4>}
-              description={`logged in as ${loggedInUser?.email}`}
-            />
-          </List.Item>
-        </List> */}
         {
           isViewer ? null : (
             <>

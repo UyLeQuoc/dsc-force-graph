@@ -52,56 +52,59 @@ function ShowNote({graphInfoFirebase, modalNode, isViewer, drawer} : IProps) {
 
 
   return (
-			<Drawer
-						width={600}
-						title={`${modalNode.name} - ${modalNode.group}`}
-						placement={"right"}
-						closable={true}
-						onClose={onClose}
-						open={open}
-						extra={
-							isViewer || (
-								<Space>
-									<Popconfirm
-										title="Delete the node"
-										description="Are you sure to delete this node?"
-										onConfirm={confirm}
-										okText="Yes"
-										cancelText="No"
+			<>
+				<Drawer
+					width={600}
+					title={`${modalNode.name} - ${modalNode.group}`}
+					placement={"right"}
+					closable={true}
+					onClose={onClose}
+					open={open}
+					extra={
+						isViewer || (
+							<Space>
+								<Popconfirm
+									title="Delete the node"
+									description="Are you sure to delete this node?"
+									onConfirm={confirm}
+									okText="Yes"
+									cancelText="No"
+								>
+									<Button type="primary" danger>Delete</Button>
+								</Popconfirm>
+								<Button type="primary">
+									<Link
+										href={`/${graphInfoFirebase.id}/${modalNode.id}`} 
+										rel="noopener noreferrer" 
+										target="_blank"
+										style={{color: 'white'}}
 									>
-										<Button type="primary" danger>Delete</Button>
-									</Popconfirm>
-									<Button type="primary">
-										<Link
-											href={`/${graphInfoFirebase.id}/${modalNode.id}`} 
-											rel="noopener noreferrer" 
-											target="_blank"
-											style={{color: 'white'}}
-										>
-												View
-										</Link>
-									</Button>
-								</Space>
-								)
+											View
+									</Link>
+								</Button>
+							</Space>
+							)
+					}
+					footer={
+						<Button type="primary" onClick={onClose}>View Question</Button>
+					}
+				>
+						{
+							isEmpty ? (
+								<Row align="middle" style={{height: '100%'}}>
+									<Col span={24}>
+										<Empty description="No Note Found" />
+									</Col>
+								</Row>
+							) : (
+								<Skeleton loading={loading} active>
+									<Editor noteFirebase={noteFirebase} loading={loading} isReadable={true} updateNote={undefined} />
+								</Skeleton>
+							)
 						}
-						footer={
-							<Button type="primary" onClick={onClose}>View Question</Button>
-						}
-					>
-							{
-								isEmpty ? (
-									<Row align="middle" style={{height: '100%'}}>
-										<Col span={24}>
-											<Empty description="No Note Found" />
-										</Col>
-									</Row>
-								) : (
-									<Skeleton loading={loading} active>
-										<Editor noteFirebase={noteFirebase} loading={loading} isReadable={true} updateNote={undefined} />
-									</Skeleton>
-								)
-							}
-					</Drawer>
+				</Drawer>
+				
+			</>
   )
 }
 

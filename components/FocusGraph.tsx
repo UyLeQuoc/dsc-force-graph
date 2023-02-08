@@ -71,7 +71,6 @@ export default function BasicNodeChart({loggedInUser, graphID} : any) {
 
 		setGraphData(newGraphData);
 		setNodeName('');
-		setNodeValue(0);
 	}
 
 	const removeNode = (node) => {

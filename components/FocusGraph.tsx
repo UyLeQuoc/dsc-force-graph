@@ -1,6 +1,5 @@
-import { Button, Drawer, message, notification, Popconfirm, Space } from "antd";
+import { message, notification } from "antd";
 import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import ForceGraph3D, { ForceGraphMethods, GraphData, LinkObject, NodeObject } from "react-force-graph-3d";
@@ -19,15 +18,10 @@ export default function BasicNodeChart({loggedInUser, graphID} : any) {
 	// Node Data State
   const [nodeName, setNodeName] = useState<string>('');
 	const [nodeGroup, setNodeGroup] = useState<string>('');
-  const [nodeValue, setNodeValue] = useState<number>(0);
-  const [action, setAction] = useState(false);
-
 	const [isNodeRemoving, setIsNodeRemoving] = useState(false);
 	const [isLinkRemoving, setIsLinkRemoving] = useState(false);
 	const [isLinking, setIsLinking] = useState(false);
 	const [nodeToLink, setNodeToLink] = useState<NodeObject>(null);
-	// const [linkName, setLinkName] = useState('');
-	// const [linkColor, setLinkColor] = useState('#888888');
 
 	// Graph Options State
 	const [enableFocusOnNode, setEnableFocusOnNode] = useState(false);
@@ -77,7 +71,6 @@ export default function BasicNodeChart({loggedInUser, graphID} : any) {
 
 		setGraphData(newGraphData);
 		setNodeName('');
-		setNodeValue(0);
 	}
 
 	const removeNode = (node) => {
@@ -222,20 +215,6 @@ export default function BasicNodeChart({loggedInUser, graphID} : any) {
 		}
 	},[loggedInUser, graphInfoFirebase])
 
-	const [loading,setLoading] = useState<boolean>(true);
-
-	const getUserFromFirebase = async () => {
-		const userRef = doc(db, 'users', loggedInUser.uid);
-		const userSnap = await getDoc(userRef);
-		if (userSnap.exists()) {
-			setGraphData({
-				nodes: userSnap.data().graph?.nodes,
-				links: userSnap.data().graph?.links,
-			} || {nodes:[],links:[]});
-		}
-		return;
- 	};
-
 	 const getGraphInfoFromFirebase = async () => {
 		const graphInfoRef = doc(db,'graphs', graphID);
 		const graphInfoSnap = await getDoc(graphInfoRef);
@@ -294,10 +273,6 @@ export default function BasicNodeChart({loggedInUser, graphID} : any) {
 	useEffect( () => {
 			// getUserFromFirebase();
 			getGraphInfoFromFirebase();
-			// reset loading
-			setTimeout(() => {
-				setLoading(false);
-			},2000)
 			
 			// bloom effect
 			const bloomPass = new UnrealBloomPass();
@@ -310,12 +285,16 @@ export default function BasicNodeChart({loggedInUser, graphID} : any) {
 
 	// graph effect
 	const extraRenderers = [new CSS2DRenderer()];
-	
 
   return (
 		<>
 			{/* <h1>{isViewer ? 'Viewer' : 'Editor'}</h1> */}
-			<UIGraphController graphInfoFirebase={graphInfoFirebase} loggedInUser={loggedInUser} updateGraph={updateGraph} isViewer={isViewer}>
+			<UIGraphController 
+				graphInfoFirebase={graphInfoFirebase} 
+				loggedInUser={loggedInUser} 
+				updateGraph={updateGraph} 
+				isViewer={isViewer}
+			>
 				<AsideOptions
 					graphData={{
 						nodeName, setNodeName,
@@ -365,47 +344,14 @@ export default function BasicNodeChart({loggedInUser, graphID} : any) {
 			/>
 			{
 				modalNode && (
-					<Drawer
-						width={600}
-						title="Basic Drawer"
-						placement={"right"}
-						closable={true}
-						onClose={onClose}
-						open={open}
-						extra={
-							isViewer || (
-								<Space>
-									<Popconfirm
-										title="Delete the node"
-										description="Are you sure to delete this node?"
-										onConfirm={confirm}
-										okText="Yes"
-										cancelText="No"
-									>
-										<Button type="primary" danger>Delete</Button>
-									</Popconfirm>
-									<Button type="primary">
-										<Link 
-											href={`/${graphInfoFirebase.id}/${modalNode.id}`} 
-											rel="noopener noreferrer" 
-											target="_blank"
-											style={{color: 'white'}}
-										>
-												View
-										</Link>
-									</Button>
-								</Space>
-								)
-						}
-					>
-							{/* <div>ID: {modalNode.id}</div>
-							<div>Name: {modalNode.name}</div>
-							<div>Group: {modalNode.group}</div>
-							<div>Color: {modalNode.color}</div>
-							<div>x: {modalNode.x}, y: {modalNode.y}. z: {modalNode.z}</div>
-							<div>vx: {modalNode.vx}, vy: {modalNode.vy}. vz: {modalNode.vz}</div> */}
-							<ShowNote graphID={graphInfoFirebase.id} noteID={`${modalNode.id}`} />
-					</Drawer>
+					<ShowNote 
+						graphInfoFirebase={graphInfoFirebase} 
+						modalNode={modalNode} 
+						isViewer={isViewer}
+						drawer={{
+							open, onClose, confirm
+						}}
+					/>
 				)
 			}
 		</>

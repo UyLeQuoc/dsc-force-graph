@@ -1,5 +1,6 @@
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
+import Youtube from '@tiptap/extension-youtube'
 import { Button, Skeleton } from 'antd'
 import { useState } from 'react'
 import MenuBar from './MenuBar'
@@ -10,6 +11,7 @@ const Editor = ({noteFirebase, loading, updateNote, isReadable = false}) => {
     editable: !isReadable,
     extensions: [
       StarterKit,
+      Youtube
     ],
     content: noteFirebase.content,
   })

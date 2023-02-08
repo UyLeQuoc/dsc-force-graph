@@ -4,7 +4,31 @@ import React, { Fragment } from 'react'
 import MenuItem from './MenuItem'
 
 export default ({ editor }) => {
+  // const widthRef = React.useRef(null)
+  // const heightRef = React.useRef(null)
+
+  // React.useEffect(() => {
+  //   if (widthRef.current && heightRef.current) {
+  //     widthRef.current.value = 640
+  //     heightRef.current.value = 480
+  //   }
+  // }, [widthRef.current, heightRef.current])
+
   if(!editor) return;
+
+  const addYoutubeVideo = () => {
+    const url = prompt('Enter YouTube URL')
+  
+    if (url) {
+      editor.commands.setYoutubeVideo({
+        src: url,
+        // width: Math.max(320, parseInt(widthRef.current.value, 10)) || 640,
+        // height: Math.max(180, parseInt(heightRef.current.value, 10)) || 480,
+        width: 500,
+        height: 360,
+      })
+    }
+  }
 
   const items = [
     {
@@ -135,6 +159,14 @@ export default ({ editor }) => {
       title: 'Redo',
       action: () => editor.chain().focus().redo().run(),
     },
+    {
+      type: 'divider',
+    },
+    {
+      icon: 'youtube',
+      title: 'Embed Youtube',
+      action: addYoutubeVideo
+    }
   ]
 
   return (

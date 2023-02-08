@@ -7,6 +7,7 @@
     "type-check": "tsc"
   },
   "dependencies": {
+    "@tiptap/extension-youtube": "^2.0.0-beta.212",
     "@tiptap/react": "^2.0.0-beta.205",
     "@tiptap/starter-kit": "^2.0.0-beta.205",
     "antd": "^5.1.3",

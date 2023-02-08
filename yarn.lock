@@ -921,6 +921,11 @@
   resolved "https://registry.yarnpkg.com/@tiptap/extension-text/-/extension-text-2.0.0-beta.209.tgz#f34a6cda849c16d7dbf9677e2cf6242cc6987a9e"
   integrity sha512-12PTPTQViDR7xDLwxGMPiYaV89E9olH/+4Zfoh6QiOjHqhmgYu3+/c8YZ3eARgXnfpy/EzUD0PBxiAyDZJ1vdw==
 
+"@tiptap/extension-youtube@^2.0.0-beta.212":
+  version "2.0.0-beta.212"
+  resolved "https://registry.yarnpkg.com/@tiptap/extension-youtube/-/extension-youtube-2.0.0-beta.212.tgz#831af38a6fa018db63a3ec29bd8c2821a7810b08"
+  integrity sha512-3ik9w9BagLI1iCP9nCvVlFseq0RSjwZZi5GU9eoHfAgo+JeQQPWix2TsrqU7vzAzDU/fuYk2L+Agf9KwWSslFg==
+
 "@tiptap/react@^2.0.0-beta.205":
   version "2.0.0-beta.209"
   resolved "https://registry.yarnpkg.com/@tiptap/react/-/react-2.0.0-beta.209.tgz#8a547b2d48f39a285dbe83d1e38f035f688bfa12"

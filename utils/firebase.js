@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { getApp, getApps, initializeApp } from "firebase/app";
-import { getFirestore } from 'firebase/firestore'
+import { addDoc, collection, getDocs, getFirestore, query, Timestamp, where } from 'firebase/firestore'
 import { getAuth } from 'firebase/auth'
 import { getStorage } from "firebase/storage";
 
@@ -28,5 +28,25 @@ const db = getFirestore(app);
 const storage = getStorage(app);
 
 const auth = getAuth(app);
+
+export const getQuestionFromFirebase = async (graphID, noteID) => {
+  if(!graphID || !noteID) return;
+
+  const queryQuestion = query(collection(db, "graphs", `${graphID}`, 'questions'), where("noteID", "==", noteID));
+  const output = [];
+  const querySnapshot = await getDocs(queryQuestion);
+  querySnapshot.forEach((doc) => {
+    // doc.data() is never undefined for query doc snapshots
+    console.log(doc.id, " => ", doc.data());
+    output.push(doc.data());
+  });
+  return output;
+};
+
+export const addQuestionToFirebase = async (graphID, noteID, output) => {
+  if(!graphID || !noteID) return;
+  const docRef = await addDoc(collection(db, "graphs", `${graphID}`, 'questions'), output);
+  console.log("Document written with ID: ", docRef.id);
+}
 
 export {db, auth, storage}

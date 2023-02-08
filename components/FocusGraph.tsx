@@ -351,6 +351,7 @@ export default function BasicNodeChart({loggedInUser, graphID} : any) {
 						drawer={{
 							open, onClose, confirm
 						}}
+						loggedInUser={loggedInUser}
 					/>
 				)
 			}

@@ -25,12 +25,8 @@ function QuestionList({loggedInUser, questionList, graphID, noteID} : Iprops) : 
     })
   }
 
-  const handleGetAnswer = (questionID) => {
-    getAnswerFromFirebase(graphID, questionID, loggedInUser.uid)
-    .then((note) => {
-      console.log(note)
-      return note;
-    })
+  const handleGetAnswer = async (questionID) => {
+    return await getAnswerFromFirebase(graphID, questionID, loggedInUser.uid)
   }
 
   const handleUpdateAnswer = async (questionID, content) => {

@@ -1,23 +1,33 @@
-import { Button, Card, Typography } from 'antd'
+import { Button, Card, message, Typography } from 'antd'
 import {useEffect, useState} from 'react'
 import Editor from '../Editor';
 
 type IProps = {
   question: any;
   key: number;
-  handleGetAnswer: (questionID: string) => any;
+  handleGetAnswer: (questionID: string) => Promise<any>;
   handleCreateAnswer: (questionID: string) => void;
   handleUpdateAnswer: (questionID: string, content: string) => void;
 }
 function Question({question, handleGetAnswer, handleCreateAnswer, handleUpdateAnswer} : IProps) {
-  const [answer, setAnswer] = useState<any>("")
+  const [answer, setAnswer] = useState<any>(null)
+  const [isLoading, setIsLoading] = useState<boolean>(true)
 
   useEffect(() => {
-    
-      setAnswer(handleGetAnswer(question.questionID))
+      handleGetAnswer(question.questionID)
+      .then((answer) => {
+        if(!answer) {
+          message.error('No answer found')
+        }
+        setAnswer(answer)
+        setIsLoading(false)
+        console.log('answer', answer)
+      })
+      
   
     return () => {
       setAnswer("")
+      setIsLoading(true)
     }
   }, [question.questionID])
   

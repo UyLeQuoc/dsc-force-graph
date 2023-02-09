@@ -85,7 +85,6 @@ export const getAnswerFromFirebase = async (graphID, questionID, userID) => {
   if (noteSnap.exists()) {
     return noteSnap.data();
   } else {
-    // doc.data() will be undefined in this case
     return null;
   }
  };

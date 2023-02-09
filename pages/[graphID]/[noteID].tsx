@@ -5,8 +5,10 @@ import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import Editor from '../../components/Editor';
-import { auth, db } from '../../utils/firebase';
-
+import QuestionList from '../../components/QuestionSection/QuestionList';
+import QuestionsModal from '../../components/QuestionSection/QuestionsModal';
+import { IQuestion } from '../../interfaces';
+import { auth, db, getQuestionFromFirebase, updateNote } from '../../utils/firebase';
 
 function App() {
 	// read slug nextjs
@@ -18,6 +20,7 @@ function App() {
 	// firebase
 	const [noteFirebase,setNoteFirebase] = useState<any>();
 	const [loading,setLoading] = useState<boolean>(true);
+	const [questionList, setQuestionList] = useState<IQuestion[]>([]);
 
 	const getNoteFromFirebase = async () => {
 		const noteRef = doc(db, 'graphs', `${graphID}`, 'notes' ,`${noteID}`);
@@ -35,35 +38,40 @@ function App() {
 		const noteRef = doc(db, 'graphs', `${graphID}`, 'notes' ,`${noteID}`);
 		const data = {
 			content: '<h1>Start typing...</h1>',
-			timestamp: serverTimestamp()
+			timestamp: serverTimestamp(),
+			owner: loggedInUser.uid
 		}
 		await setDoc(noteRef, data);
 		alert('Create new note!');
 		setNoteFirebase(data);
 	}
 
-	const updateNote = async (content) => {
-		const noteRef = doc(db, 'graphs', `${graphID}`, 'notes' ,`${noteID}`);
-		const data = {
-			content: content,
-			timestamp: serverTimestamp()
-		}
-		await updateDoc(noteRef, data);
-		message.success('Note updated!');
-	}
 	useEffect( () => {
 			if(graphID && noteID) {
 				getNoteFromFirebase();
+				getQuestionFromFirebase(graphID,noteID).then((res) => {
+					setQuestionList(res)
+				})
 			}
 			// reset loading
 			setTimeout(() => {
 				setLoading(false);
 			},2000)
+
+			
+			return () => {
+				setQuestionList([])
+			}
 	},[]);
 
 	return (
 		<>
-			<Editor noteFirebase={noteFirebase} loading={loading} updateNote={updateNote}/>
+			<Editor noteFirebase={noteFirebase} loading={loading} updateNote={(content) => updateNote(graphID,noteID, content)} />
+			{/* //QuestionModal */}
+			<QuestionsModal graphID={`${graphID}`} noteID={`${noteID}`} loggedInUser={loggedInUser}/>
+			{
+				questionList && <QuestionList loggedInUser={loggedInUser} graphID={`${graphID}`} noteID={`${noteID}`} questionList={questionList}/>
+			}
 		</>
 	);
 }

@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { getApp, getApps, initializeApp } from "firebase/app";
-import { addDoc, collection, getDocs, getFirestore, query, Timestamp, where } from 'firebase/firestore'
+import { addDoc, collection, doc, getDoc, getDocs, getFirestore, query, serverTimestamp, setDoc, Timestamp, updateDoc, where } from 'firebase/firestore'
 import { getAuth } from 'firebase/auth'
 import { getStorage } from "firebase/storage";
 
@@ -38,7 +38,10 @@ export const getQuestionFromFirebase = async (graphID, noteID) => {
   querySnapshot.forEach((doc) => {
     // doc.data() is never undefined for query doc snapshots
     console.log(doc.id, " => ", doc.data());
-    output.push(doc.data());
+    output.push({
+      questionId: doc.id,
+      ...doc.data()
+    });
   });
   return output;
 };
@@ -49,4 +52,54 @@ export const addQuestionToFirebase = async (graphID, noteID, output) => {
   console.log("Document written with ID: ", docRef.id);
 }
 
+export const createAnswerToFirebase = async (graphID, questionID, userID, output) => {
+  const noteRef = doc(db, 'graphs', `${graphID}`, 'questions' , questionID, 'answers', userID);
+  const data = {
+    ...output,
+    timestamp: serverTimestamp(),
+  }
+  await setDoc(noteRef, data);
+}
+
+export const updateNote = async (graphID, noteID, content) => {
+  const noteRef = doc(db, 'graphs', `${graphID}`, 'notes' ,`${noteID}`);
+  const data = {
+    content: content,
+    timestamp: serverTimestamp()
+  }
+  await updateDoc(noteRef, data);
+}
+
+export const updateAnswerToFirebase = async (graphID, questionID, userID, content) => {
+  const noteRef = doc(db, 'graphs', `${graphID}`, 'questions' , questionID, 'answers', userID);
+  const data = {
+    content: content,
+    timestamp: serverTimestamp()
+  }
+  await updateDoc(noteRef, data);
+}
+
+export const getAnswerFromFirebase = async (graphID, questionID, userID) => {
+  const noteRef = doc(db, 'graphs', `${graphID}`, 'questions' , questionID, 'answers', userID);
+  const noteSnap = await getDoc(noteRef);
+  if (noteSnap.exists()) {
+    return noteSnap.data();
+  } else {
+    // doc.data() will be undefined in this case
+    return null;
+  }
+ };
+
+export const getNoteFromFirebase = async (graphID, noteID) => {
+  const noteRef = doc(db, 'graphs', `${graphID}`, 'notes' ,`${noteID}`);
+  const noteSnap = await getDoc(noteRef);
+  if (noteSnap.exists()) {
+    return noteSnap.data();
+  } else {
+    // doc.data() will be undefined in this case
+    return null;
+    
+  }
+ };
+ 
 export {db, auth, storage}

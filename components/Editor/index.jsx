@@ -1,8 +1,7 @@
-import { useEditor, EditorContent } from '@tiptap/react'
-import StarterKit from '@tiptap/starter-kit'
 import Youtube from '@tiptap/extension-youtube'
-import { Button, Skeleton } from 'antd'
-import { useState } from 'react'
+import { EditorContent, useEditor } from '@tiptap/react'
+import StarterKit from '@tiptap/starter-kit'
+import { Button, message, Skeleton } from 'antd'
 import MenuBar from './MenuBar'
 
 const Editor = ({noteFirebase, loading, updateNote, isReadable = false}) => {
@@ -15,6 +14,11 @@ const Editor = ({noteFirebase, loading, updateNote, isReadable = false}) => {
     ],
     content: noteFirebase.content,
   })
+
+  const handleUpdate = () => {
+    updateNote(editor.getHTML())
+    .then(() => message.success('Saved!'))
+  }
 
   return (
     <div className='bg-white rounded-lg flex flex-col border-[3px] m-10'>
@@ -33,7 +37,7 @@ const Editor = ({noteFirebase, loading, updateNote, isReadable = false}) => {
       {
         isReadable || (
           <footer className='items-center text-black flex text-xs flex-wrap font-semibold justify-between whitespace-no-wrap px-3 py-1 border-t-[3px]'>
-            <Button type='primary' onClick={() => updateNote(editor.getHTML())}>Save</Button>
+            <Button type='primary' onClick={handleUpdate}>Save</Button>
           </footer>
         )
       }

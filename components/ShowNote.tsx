@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { db, getQuestionFromFirebase } from '../utils/firebase';
 import Editor from './Editor';
-import QuestionsModal from './QuestionsModal';
 
 type IProps = {
 	graphInfoFirebase: any;
@@ -88,11 +87,6 @@ function ShowNote({graphInfoFirebase, modalNode, isViewer, drawer, loggedInUser}
 								</Button>
 							</Space>
 							)
-					}
-					footer={
-						<QuestionsModal graphID={graphInfoFirebase.id} noteID={modalNode.id}
-						loggedInUser={loggedInUser}
-						/>
 					}
 				>
 						{

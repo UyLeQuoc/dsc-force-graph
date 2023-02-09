@@ -1,7 +1,7 @@
 import { Button, Input, Modal } from 'antd';
 import { Timestamp } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
-import { addQuestionToFirebase, getQuestionFromFirebase } from '../utils/firebase';
+import { addQuestionToFirebase, getQuestionFromFirebase } from '../../utils/firebase';
 
 type IProps = {
   graphID: string;

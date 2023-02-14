@@ -24,6 +24,8 @@
     "prosemirror-transform": "^1.7.0",
     "prosemirror-view": "^1.29.2",
     "react": "^18.2.0",
+    "react-admin": "^4.8.0",
+    "react-admin-firebase": "^4.0.11",
     "react-dom": "^18.2.0",
     "react-firebase-hooks": "^5.1.1",
     "react-force-graph": "^1.41.18",

@@ -49,7 +49,7 @@ function App() {
 	useEffect( () => {
 			if(graphID && noteID) {
 				getNoteFromFirebase();
-				getQuestionFromFirebase(graphID,noteID).then((res) => {
+				getQuestionFromFirebase(noteID).then((res) => {
 					setQuestionList(res)
 				})
 			}
@@ -67,8 +67,6 @@ function App() {
 	return (
 		<>
 			<Editor noteFirebase={noteFirebase} loading={loading} updateNote={(content) => updateNote(graphID,noteID, content)} />
-			{/* //QuestionModal */}
-			<QuestionsModal graphID={`${graphID}`} noteID={`${noteID}`} loggedInUser={loggedInUser} questionList={questionList} setQuestionList={setQuestionList}/>
 			{
 				questionList && <QuestionList questionList={questionList} setQuestionList={setQuestionList} loggedInUser={loggedInUser} graphID={`${graphID}`} noteID={`${noteID}`}/>
 			}

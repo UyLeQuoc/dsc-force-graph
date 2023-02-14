@@ -26,5 +26,8 @@
 , "pages/[graphID]/[noteID].tsx", "components/BasicNodeChart.jsx", "pages/index.tsx", "components/Editor/index.jsx", "components/Editor/MenuBar.tsx", "components/Editor/MenuItem.tsx"  ],
   "exclude": [
     "node_modules"
-  ]
+  ],
+  "paths": {
+    "react": [ "./node_modules/@types/react" ]
+  }
 }

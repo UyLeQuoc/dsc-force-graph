@@ -4,7 +4,7 @@ import Upload, { RcFile, UploadFile, UploadProps } from 'antd/lib/upload';
 import { Timestamp } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { addQuestionToFirebase, getQuestionFromFirebase, multiImage } from '../../utils/firebase';
+import { getQuestionFromFirebase, multiImage } from '../../utils/firebase';
 
 type IProps = {
   graphID: string;
@@ -74,31 +74,10 @@ function QuestionsModal({graphID, noteID, loggedInUser, questionList, setQuestio
   const handleModalCancel = () => {
     setIsModalOpen(false);
   };
-
-  const handleAddQuestion = async () => {
-    const questionID = uuidv4();
-    multiImage(questionID, fileList)
-    .then(async (res) => {
-      const output = {
-        questionID: questionID,
-        question: questionInput,
-        noteID: noteID,
-        lastModified: Timestamp.now(),
-        owner: loggedInUser.uid,
-        images: res
-      }
-      console.log("photourl", res)
-      await addQuestionToFirebase(graphID, output).then((res) => {
-        setQuestionList([...questionList, output]);
-        setQuestionInput('');
-      })
-    })
-  }
-
   console.log(fileList);
 
   useEffect(() => {
-    getQuestionFromFirebase(graphID,noteID).then((res) => {
+    getQuestionFromFirebase(noteID).then((res) => {
       setQuestions(res)
     })
     return () => {
@@ -125,7 +104,7 @@ function QuestionsModal({graphID, noteID, loggedInUser, questionList, setQuestio
       <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
         <img alt="example" style={{ width: '100%' }} src={previewImage} />
       </Modal>
-      <Button type='primary' onClick={handleAddQuestion}>Add Question</Button>
+      <Button type='primary'>Add Question</Button>
       </Modal>
     </>
 )

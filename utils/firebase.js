@@ -1,8 +1,8 @@
 // Import the functions you need from the SDKs you need
 import { getApp, getApps, initializeApp } from "firebase/app";
-import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, query, serverTimestamp, setDoc, Timestamp, updateDoc, where } from 'firebase/firestore'
-import { getAuth } from 'firebase/auth'
-import { getDownloadURL, getStorage, ref, uploadBytes, uploadBytesResumable, uploadString } from "firebase/storage";
+import { getAuth } from 'firebase/auth';
+import { collection, deleteDoc, doc, getDoc, getDocs, getFirestore, query, serverTimestamp, setDoc, updateDoc, where } from 'firebase/firestore';
+import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
 import { v4 as uuidv4 } from 'uuid';
 
 
@@ -12,7 +12,7 @@ import { v4 as uuidv4 } from 'uuid';
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 
-const firebaseConfig = {
+export const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_APIKEY,
   authDomain: process.env.NEXT_PUBLIC_AUTHDOMAIN,
   projectId: process.env.NEXT_PUBLIC_PROJECTID,
@@ -31,10 +31,10 @@ const storage = getStorage(app);
 
 const auth = getAuth(app);
 
-export const getQuestionFromFirebase = async (graphID, noteID) => {
-  if(!graphID || !noteID) return;
+export const getQuestionFromFirebase = async (noteID) => {
+  if(!noteID) return;
 
-  const queryQuestion = query(collection(db, "graphs", `${graphID}`, 'questions'), where("noteID", "==", noteID));
+  const queryQuestion = query(collection(db, 'Questions'), where("noteID", "==", noteID));
   const output = [];
   const querySnapshot = await getDocs(queryQuestion);
   querySnapshot.forEach((doc) => {
@@ -43,11 +43,6 @@ export const getQuestionFromFirebase = async (graphID, noteID) => {
   });
   return output;
 };
-
-export const addQuestionToFirebase = async (graphID, output) => {
-  if(!graphID) return;
-  await setDoc(doc(db, "graphs", `${graphID}`, 'questions', output.questionID), output);
-}
 
 export const deleteQuestionFromFirebase = async (graphID, questionID) => {
   if(!graphID || !questionID) return;
@@ -89,6 +84,7 @@ export const updateAnswerToFirebase = async (graphID, questionID, userID, conten
   }
   await updateDoc(noteRef, data);
 }
+
 
 export const getAnswerFromFirebase = async (graphID, questionID, userID) => {
     const noteRef = doc(db, 'graphs', `${graphID}`, questionID, userID);
@@ -231,5 +227,8 @@ export const multiImage = async (questionID, imageFileList) => {
   console.log("imagesUrlArray222", imagesUrlArray)
   return imagesUrlArray;
 };
- 
-export {db, auth, storage}
+
+
+
+
+export { db, auth, storage };

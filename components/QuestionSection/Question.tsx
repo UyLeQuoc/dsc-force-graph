@@ -1,5 +1,4 @@
-import { Button, Card, message, Typography } from 'antd'
-import Image from 'next/image';
+import { Button, Card, message, Typography, Image } from 'antd'
 import {useEffect, useState} from 'react'
 import { getAnswerFromFirebase } from '../../utils/firebase';
 import Editor from '../Editor';
@@ -16,7 +15,7 @@ function Question({question, handleGetAnswer,  handleUpdateAnswer, handleDeleteQ
   const [isLoading, setIsLoading] = useState<boolean>(true)
 
   useEffect(() => {
-    handleGetAnswer(question.questionID)
+    handleGetAnswer(question.id)
       .then((answer) => {
         setAnswer(answer)
         setIsLoading(false)
@@ -31,19 +30,16 @@ function Question({question, handleGetAnswer,  handleUpdateAnswer, handleDeleteQ
 
   return (
     <Card 
-      title={`Question: ${question.question}`} 
+      title={`Question: ${question.name}`} 
       extra={
         <>
-          <Button type='primary' danger onClick={() => handleDeleteQuestion(question.questionID)}>Delete</Button>
+          <Button type='primary' danger onClick={() => handleDeleteQuestion(question.id)}>Delete</Button>
         </>
     }>
-      {
-        question.images && question.images.map((image, index) => {
-          return (
-            <Image key={index} src={image} alt="Question Image" width={300} height={300}/>
-          )
-        })
-      }
+      {question.picture != null && (
+        <Image
+          src={question.picture.src} alt={question.picture.title} />
+      )}
       {
         answer &&  <Editor noteFirebase={answer} loading={false} updateNote={(content) => handleUpdateAnswer(question.questionID, content)} />
       }

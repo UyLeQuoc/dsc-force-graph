@@ -54,13 +54,10 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   if (loading) return <Loading />
 
-  if(cleanPath){
     if(cleanPath.slice(1,5) !== 'view') {
       if (!loggedInUser) return <LoginPage />
     }
-  }
   
-
   return <Component {...pageProps} />
 }
 

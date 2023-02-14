@@ -2,10 +2,10 @@ import dynamic from "next/dynamic";
 
 const AdminComponent : any = dynamic(() => import("../components/admin/AdminComponent"), { ssr: false });
 
-const Home = () : JSX.Element => {
-  return <>
+function admin() {
+  return (
     <AdminComponent />
-  </>;
-};
+  )
+}
 
-export default Home;
+export default admin

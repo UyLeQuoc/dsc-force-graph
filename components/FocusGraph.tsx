@@ -12,7 +12,7 @@ import AsideOptions from "./AsideOptions";
 import ShowNote from "./ShowNote";
 import UIGraphController from "./UIGraphController";
 
-export default function BasicNodeChart({loggedInUser, graphID} : any) {
+export default function BasicNodeChart({loggedInUser, graphID} : any) : JSX.Element {
 	const [isViewer, setIsViewer] = useState(true);
 
 	// Node Data State

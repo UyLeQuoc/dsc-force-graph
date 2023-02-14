@@ -22,12 +22,10 @@
   "include": [
     "next-env.d.ts",
     "**/*.ts",
-    "**/*.tsx"
-, "pages/[graphID]/[noteID].tsx", "components/BasicNodeChart.jsx", "pages/index.tsx", "components/Editor/index.jsx", "components/Editor/MenuBar.tsx", "components/Editor/MenuItem.tsx"  ],
+    "**/*.tsx"],
   "exclude": [
     "node_modules"
-  ],
-  "paths": {
+  ],"paths": {
     "react": [ "./node_modules/@types/react" ]
   }
 }

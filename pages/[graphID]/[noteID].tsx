@@ -1,14 +1,12 @@
 
-import { message, Skeleton } from 'antd';
-import { doc, getDoc, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
 import { useRouter } from 'next/router';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import Editor from '../../components/Editor';
 import QuestionList from '../../components/QuestionSection/QuestionList';
-import QuestionsModal from '../../components/QuestionSection/QuestionsModal';
 import { IQuestion } from '../../interfaces';
-import { auth, db, getQuestionFromFirebase, updateNote } from '../../utils/firebase';
+import { auth, db, getAnswerFromFirebase, getQuestionFromFirebase, updateNote } from '../../utils/firebase';
 
 function App() {
 	// read slug nextjs
@@ -16,12 +14,13 @@ function App() {
 	const { graphID, noteID } = query;
 
 	const [loggedInUser, _loading, _error] = useAuthState(auth);
-
+	console.log('loggedInUser', loggedInUser)
 	// firebase
 	const [noteFirebase,setNoteFirebase] = useState<any>();
 	const [loading,setLoading] = useState<boolean>(true);
 	const [questionList, setQuestionList] = useState<IQuestion[]>([]);
-
+	const [answerList, setAnswerList] = useState<any>([]);
+	console.log('answerList', answerList)
 	const getNoteFromFirebase = async () => {
 		const noteRef = doc(db, 'graphs', `${graphID}`, 'notes' ,`${noteID}`);
 		const noteSnap = await getDoc(noteRef);
@@ -52,6 +51,9 @@ function App() {
 				getQuestionFromFirebase(noteID).then((res) => {
 					setQuestionList(res)
 				})
+				getAnswerFromFirebase(loggedInUser).then((res) => {
+					setAnswerList(res)
+				})
 			}
 			// reset loading
 			setTimeout(() => {
@@ -61,16 +63,18 @@ function App() {
 			
 			return () => {
 				setQuestionList([])
+				setAnswerList([])
 			}
 	},[]);
 
 	return (
-		<>
+		<div className='p-10'>
+			<h3 className='mb-2'>Note ID: {noteID}</h3>
 			<Editor noteFirebase={noteFirebase} loading={loading} updateNote={(content) => updateNote(graphID,noteID, content)} />
 			{
-				questionList && <QuestionList questionList={questionList} setQuestionList={setQuestionList} loggedInUser={loggedInUser} graphID={`${graphID}`} noteID={`${noteID}`}/>
+				questionList && <QuestionList questionList={questionList} setQuestionList={setQuestionList} answerList={answerList} setAnswerList={setAnswerList} loggedInUser={loggedInUser} graphID={`${graphID}`} noteID={`${noteID}`}/>
 			}
-		</>
+		</div>
 	);
 }
 

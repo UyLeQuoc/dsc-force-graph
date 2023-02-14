@@ -13,13 +13,14 @@ import {
   ImageField,
   ImageInput
 } from 'react-admin';
+import MyImageField from './MyImageField';
 
 export const QuestionShow = (props) => (
   <Show {...props}>
       <Datagrid>
         <TextField source='name' label="Question"/>
         <TextField source='noteID' label="URL Note ID" />
-        <ImageField source="Question-Pic.src" title="title" />
+        <ImageField source="picture" title="title" />
         <EditButton />
         <DeleteButton />
       </Datagrid>
@@ -31,7 +32,7 @@ export const QuestionList = (props) => {
       <Datagrid>
         <TextField source='name' label="Question"/>
         <TextField source='noteID' label="URL Note ID" />
-        <ImageField source="Question-Pic.src" title="title" />
+        <MyImageField source="picture" />
         <EditButton />
         <DeleteButton />
       </Datagrid>
@@ -51,12 +52,13 @@ export const QuestionCreate = (props) => (
 );
 
 export const QuestionEdit = (props) => (
-  <Edit {...props}>
+  <Edit>
     <SimpleForm>
-        <TextInput source='name' label="Question" multiline/>
-        <ImageInput source="Question-Pic" label="Question-Pic" accept="image/*">
+        <TextInput source="noteID" />
+        <ImageInput source="picture" label="Question-Pic" accept="image/*">
           <ImageField source="Question-Pic" title="title" />
         </ImageInput>
+        <TextInput source="name" label="Question"/>
     </SimpleForm>
-  </Edit>
+    </Edit>
 );

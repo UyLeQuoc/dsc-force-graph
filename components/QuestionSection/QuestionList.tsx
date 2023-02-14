@@ -1,48 +1,36 @@
-import { Button, Card, Col, message, Row, Space, Typography } from 'antd';
-import React from 'react'
-import { IQuestion } from '../../interfaces'
-import {createAnswerToFirebase, deleteQuestionFromFirebase, getAnswerFromFirebase, updateAnswerToFirebase } from '../../utils/firebase';
-import Editor from '../Editor';
+import { Col, Row } from 'antd';
+import { IQuestion } from '../../interfaces';
+import { deleteQuestionFromFirebase, getAnswerFromFirebase, updateAnswerToFirebase } from '../../utils/firebase';
 import Question from './Question';
 
 type Iprops = {
-  questionList: IQuestion[];
   graphID: string;
   noteID: string;
   loggedInUser: any;
+  questionList: IQuestion[];
   setQuestionList: (questionList: IQuestion[]) => void;
+  answerList: any;
+  setAnswerList: (answerList: any) => void;
 }
 
+function QuestionList({loggedInUser, questionList, setQuestionList, graphID, noteID, answerList, setAnswerList} : Iprops) : JSX.Element {
 
-
-function QuestionList({loggedInUser, questionList, setQuestionList, graphID, noteID} : Iprops) : JSX.Element {
-  const handleGetAnswer = async (questionID) => {
-    return getAnswerFromFirebase(graphID, questionID, loggedInUser.uid)
-  }
-
-  const handleUpdateAnswer = async (questionID, content) => {
-    await updateAnswerToFirebase(graphID, questionID, loggedInUser.uid, content)
-  }
-
-  const handleDeleteQuestion = async (questionID) => {
-    setQuestionList(questionList.filter((question) => question.questionID !== questionID))
-    await deleteQuestionFromFirebase(graphID, questionID)
+  const handleUpdateAnswer = async (answerID, output) => {
+    await updateAnswerToFirebase(answerID, output)
   }
 
   return (
-      <div>
-      <Row>
-        {JSON.stringify(questionList)}
+      <div className='my-10'>
+        <Row>
         {
           questionList.map((question, index) => {
             return (
-                <Col span={16} offset={4}>
+                <Col span={16} offset={4} className="my-2">
                   <Question
                     key={index}
                     question={question}
-                    handleGetAnswer={handleGetAnswer}
                     handleUpdateAnswer={handleUpdateAnswer}
-                    handleDeleteQuestion={handleDeleteQuestion}
+                    answerList={answerList}
                   />
                 </Col>
             )

@@ -6,42 +6,29 @@ import Editor from '../Editor';
 type IProps = {
   question: any;
   key: number;
-  handleGetAnswer: (questionID: string) => Promise<any>;
-  handleUpdateAnswer: (questionID: string, content: string) => void;
-  handleDeleteQuestion: (questionID: string) => void;
+  handleUpdateAnswer: (answerID: string, output: any) => Promise<void>;
+  answerList: any;
 }
-function Question({question, handleGetAnswer,  handleUpdateAnswer, handleDeleteQuestion} : IProps) {
+function Question({question,   handleUpdateAnswer, answerList} : IProps) {
   const [answer, setAnswer] = useState<any>(null)
   const [isLoading, setIsLoading] = useState<boolean>(true)
-
-  useEffect(() => {
-    handleGetAnswer(question.id)
-      .then((answer) => {
-        setAnswer(answer)
-        setIsLoading(false)
-      })
-      
-  
-    return () => {
-      setIsLoading(true)
-    }
-  }, [question.questionID])
-  
+  console.log("22", answerList)
+  const answerFilter = answerList.find((answer) => answer.questionID === question.questionID);
 
   return (
     <Card 
-      title={`Question: ${question.name}`} 
-      extra={
-        <>
-          <Button type='primary' danger onClick={() => handleDeleteQuestion(question.id)}>Delete</Button>
-        </>
-    }>
-      {question.picture != null && (
-        <Image
-          src={question.picture.src} alt={question.picture.title} />
-      )}
+      title={`Question: ${question.name} - ${question.questionID}`} 
+    >
+      <div className='flex justify-center align-middle'>
+        {question.picture != null && (
+          <Image
+            src={question.picture.src} alt={question.picture.title}
+            width = {'50%'}
+            />
+        )}
+      </div>
       {
-        answer &&  <Editor noteFirebase={answer} loading={false} updateNote={(content) => handleUpdateAnswer(question.questionID, content)} />
+        answer &&  <Editor noteFirebase={answerFilter?.content} loading={false} updateNote={(content) => handleUpdateAnswer(question.id, content)} />
       }
     </Card>
   )

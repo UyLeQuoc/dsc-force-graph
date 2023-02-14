@@ -51,15 +51,13 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   const { asPath } = useRouter();
   const cleanPath = asPath.split('#')[0].split('?')[0];
-  console.log("CLEAN PATH", cleanPath.slice(1,5))
 
   if (loading) return <Loading />
 
-  if(cleanPath.slice(1,5) !== 'view') {
-    if (!loggedInUser) return <LoginPage />
-
-  }
-
+    if(cleanPath.slice(1,5) !== 'view') {
+      if (!loggedInUser) return <LoginPage />
+    }
+  
   return <Component {...pageProps} />
 }
 

@@ -1,8 +1,8 @@
-import { Button, Col, Drawer, Empty, message, Popconfirm, Row, Skeleton, Space } from 'antd';
+import { Button, Col, Drawer, Empty, message, Modal, Popconfirm, Row, Skeleton, Space } from 'antd';
 import { doc, getDoc } from 'firebase/firestore';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { db } from '../utils/firebase';
+import { db, getQuestionFromFirebase } from '../utils/firebase';
 import Editor from './Editor';
 
 type IProps = {
@@ -12,16 +12,18 @@ type IProps = {
 	drawer: {
 		open: boolean;
 		onClose: () => void;
-		confirm: (e: React.MouseEvent<HTMLElement>) => void
+		confirm: (e: React.MouseEvent<HTMLElement>) => void;
 	}
+	loggedInUser: any;
 }
-function ShowNote({graphInfoFirebase, modalNode, isViewer, drawer} : IProps) {
+function ShowNote({graphInfoFirebase, modalNode, isViewer, drawer, loggedInUser} : IProps) {
 	const { open, onClose, confirm } = drawer;
 
 	// firebase
 	const [noteFirebase,setNoteFirebase] = useState<any>();
 	const [loading,setLoading] = useState<boolean>(true);
 	const [isEmpty, setIsEmpty] = useState<boolean>(false);
+	
 
 	const getNoteFromFirebase = async (graphID, noteID) => {
 		if(!graphID || !noteID) return;
@@ -53,6 +55,7 @@ function ShowNote({graphInfoFirebase, modalNode, isViewer, drawer} : IProps) {
 
   return (
 			<>
+
 				<Drawer
 					width={600}
 					title={`${modalNode.name} - ${modalNode.group}`}
@@ -85,9 +88,6 @@ function ShowNote({graphInfoFirebase, modalNode, isViewer, drawer} : IProps) {
 							</Space>
 							)
 					}
-					footer={
-						<Button type="primary" onClick={onClose}>View Question</Button>
-					}
 				>
 						{
 							isEmpty ? (
@@ -103,8 +103,7 @@ function ShowNote({graphInfoFirebase, modalNode, isViewer, drawer} : IProps) {
 							)
 						}
 				</Drawer>
-				
-			</>
+				</>
   )
 }
 

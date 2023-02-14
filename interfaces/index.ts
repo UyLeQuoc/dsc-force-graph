@@ -21,3 +21,11 @@ export type IGraphInfo = {
   // description: string;
   // tags: string[];
 }
+
+export type IQuestion = {
+	noteID: string;
+	question: string;
+	owner: string;
+	lastModified: any;
+	questionID: string;
+}

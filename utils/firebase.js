@@ -1,8 +1,10 @@
 // Import the functions you need from the SDKs you need
 import { getApp, getApps, initializeApp } from "firebase/app";
-import { addDoc, collection, doc, getDoc, getDocs, getFirestore, query, serverTimestamp, setDoc, Timestamp, updateDoc, where } from 'firebase/firestore'
+import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, query, serverTimestamp, setDoc, Timestamp, updateDoc, where } from 'firebase/firestore'
 import { getAuth } from 'firebase/auth'
-import { getStorage } from "firebase/storage";
+import { getDownloadURL, getStorage, ref, uploadBytes, uploadBytesResumable, uploadString } from "firebase/storage";
+import { v4 as uuidv4 } from 'uuid';
+
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -37,23 +39,32 @@ export const getQuestionFromFirebase = async (graphID, noteID) => {
   const querySnapshot = await getDocs(queryQuestion);
   querySnapshot.forEach((doc) => {
     // doc.data() is never undefined for query doc snapshots
-    console.log(doc.id, " => ", doc.data());
-    output.push({
-      questionId: doc.id,
-      ...doc.data()
-    });
+    output.push(doc.data());
   });
   return output;
 };
 
-export const addQuestionToFirebase = async (graphID, noteID, output) => {
-  if(!graphID || !noteID) return;
-  const docRef = await addDoc(collection(db, "graphs", `${graphID}`, 'questions'), output);
-  console.log("Document written with ID: ", docRef.id);
+export const addQuestionToFirebase = async (graphID, output) => {
+  if(!graphID) return;
+  await setDoc(doc(db, "graphs", `${graphID}`, 'questions', output.questionID), output);
 }
 
+export const deleteQuestionFromFirebase = async (graphID, questionID) => {
+  if(!graphID || !questionID) return;
+  await deleteDoc(doc(db, "graphs", `${graphID}`, 'questions', questionID));
+
+  // await deleteDocuments(collection(db, "graphs", `${graphID}`, questionID));
+}
+
+const deleteDocuments = async (collectionRef) => {
+  const querySnapshot = await getDocs(collectionRef);
+  querySnapshot.forEach(async (doc) => {
+    await deleteDoc(doc);
+  });
+};
+
 export const createAnswerToFirebase = async (graphID, questionID, userID, output) => {
-  const noteRef = doc(db, 'graphs', `${graphID}`, 'questions' , questionID, 'answers', userID);
+  const noteRef = doc(db, 'graphs', `${graphID}`, questionID, userID);
   const data = {
     ...output,
     timestamp: serverTimestamp(),
@@ -71,7 +82,7 @@ export const updateNote = async (graphID, noteID, content) => {
 }
 
 export const updateAnswerToFirebase = async (graphID, questionID, userID, content) => {
-  const noteRef = doc(db, 'graphs', `${graphID}`, 'questions' , questionID, 'answers', userID);
+  const noteRef = doc(db, 'graphs', `${graphID}`, questionID, userID);
   const data = {
     content: content,
     timestamp: serverTimestamp()
@@ -80,14 +91,19 @@ export const updateAnswerToFirebase = async (graphID, questionID, userID, conten
 }
 
 export const getAnswerFromFirebase = async (graphID, questionID, userID) => {
-  const noteRef = doc(db, 'graphs', `${graphID}`, 'questions' , questionID, 'answers', userID);
-  const noteSnap = await getDoc(noteRef);
-  if (noteSnap.exists()) {
-    return noteSnap.data();
-  } else {
-    return null;
+    const noteRef = doc(db, 'graphs', `${graphID}`, questionID, userID);
+    const noteSnap = await getDoc(noteRef);
+    if (noteSnap.exists()) {
+      console.log("getAnswerFromFirebase", noteSnap.data())
+      return noteSnap.data();
+    } else {
+      await createAnswerToFirebase(graphID, questionID, userID, {content: "Start typing your answer here!"})
+      .then(() => {
+        return {content: "Start typing your answer here!"}
+      })
+      return {content: "Start typing your answer here!"}
   }
- };
+};
 
 export const getNoteFromFirebase = async (graphID, noteID) => {
   const noteRef = doc(db, 'graphs', `${graphID}`, 'notes' ,`${noteID}`);
@@ -100,5 +116,120 @@ export const getNoteFromFirebase = async (graphID, noteID) => {
     
   }
  };
+
+//  export const imageUpload = async (questionID, image) => {
+//   const metadata = {
+//     contentType: 'image/jpeg'
+//   };
+
+//   const questionImageID = uuidv4();
+//   const questionImagesRef = ref(storage, 'questions/' + questionID + '/images/' + questionImageID);
+//   const uploadTask = uploadBytesResumable(questionImagesRef, image.thumbUrl, metadata);
+
+//   // Listen for state changes, errors, and completion of the upload.
+//   await uploadTask.on('state_changed',
+//   (snapshot) => {
+//     // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+//     const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+//     console.log('Upload is ' + progress + '% done');
+//     switch (snapshot.state) {
+//       case 'paused':
+//         console.log('Upload is paused');
+//         break;
+//       case 'running':
+//         console.log('Upload is running');
+//         break;
+//     }
+//   }, 
+//   (error) => {
+//     // A full list of error codes is available at
+//     // https://firebase.google.com/docs/storage/web/handle-errors
+//     switch (error.code) {
+//       case 'storage/unauthorized':
+//         // User doesn't have permission to access the object
+//         break;
+//       case 'storage/canceled':
+//         // User canceled the upload
+//         break;
+
+//       // ...
+
+//       case 'storage/unknown':
+//         // Unknown error occurred, inspect error.serverResponse
+//         break;
+//     }
+//   }, 
+//   async () => {
+//     // Upload completed successfully, now we can get the download URL
+//     await getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+//       console.log('File available at', downloadURL);
+//       return {
+//         url: downloadURL,
+//         questionImageID: questionImageID
+//       };
+//     })
+//   }
+//   );
+// };
+
+// export const multipleImageUpload = async (questionID, imageFileList) => {
+//   let imagesUrlArray = [];
+//   // array of files
+//   let arr = imageFileList.map((item) => {
+//     return item;
+//   });
+
+//   for (let i = 0; i < arr.length; i++) {
+//     await imageUpload(questionID, arr[i])
+//     .then((url) => {
+//       imagesUrlArray.push(url);
+//       console.log("imagesUrlArray", imagesUrlArray)
+//     })
+//   }
+
+//   return imagesUrlArray; // array of URLS of uploaded files
+// }
+
+export const multiImage = async (questionID, imageFileList) => {
+  /* eslint no-var: 0 */
+  const imagesUrlArray = [];
+  /* eslint no-var: 0 */
+  for (let i = 0; i < imageFileList.length; i++) {
+      const id = uuidv4();
+      /* eslint-disable no-await-in-loop */
+      const storageRef = ref(storage, 'questions/' + questionID + '/images/' + id);
+      const uploadTask = uploadBytesResumable(storageRef, imageFileList[i], {
+        contentType: 'image/png',
+      });
+      uploadTask.on('state_changed', 
+      (snapshot) => {
+        // Observe state change events such as progress, pause, and resume
+        // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log('Upload is ' + progress + '% done');
+        switch (snapshot.state) {
+          case 'paused':
+            console.log('Upload is paused');
+            break;
+          case 'running':
+            console.log('Upload is running');
+            break;
+        }
+      }, 
+      (error) => {
+        // Handle unsuccessful uploads
+      }, 
+      async () => {
+        // Handle successful uploads on complete
+        // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+        await getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          imagesUrlArray.push(downloadURL);
+        });
+        console.log("imagesUrlArray", imagesUrlArray)
+      });      
+  } // array of URLS of uploaded files
+  console.log("imagesUrlArray222", imagesUrlArray)
+  return imagesUrlArray;
+};
  
 export {db, auth, storage}

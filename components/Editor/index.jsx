@@ -21,7 +21,7 @@ const Editor = ({noteFirebase, loading, updateNote, isReadable = false}) => {
   }
 
   return (
-    <div className='bg-white rounded-lg flex flex-col border-[3px] m-10'>
+    <div className='bg-white rounded-lg flex flex-col border-[3px]'>
       {
         isReadable || (
           <header className='items-center flex flex-wrap p-1 border-b-[3px] flex-grow-0 flex-shrink-0'>

@@ -1,7 +1,7 @@
 import { Button, Card, Col, message, Row, Space, Typography } from 'antd';
 import React from 'react'
 import { IQuestion } from '../../interfaces'
-import {createAnswerToFirebase, getAnswerFromFirebase, updateAnswerToFirebase } from '../../utils/firebase';
+import {createAnswerToFirebase, deleteQuestionFromFirebase, getAnswerFromFirebase, updateAnswerToFirebase } from '../../utils/firebase';
 import Editor from '../Editor';
 import Question from './Question';
 
@@ -10,27 +10,23 @@ type Iprops = {
   graphID: string;
   noteID: string;
   loggedInUser: any;
+  setQuestionList: (questionList: IQuestion[]) => void;
 }
 
 
 
-function QuestionList({loggedInUser, questionList, graphID, noteID} : Iprops) : JSX.Element {
-  
-  const handleCreateAnswer = (questionID) => {
-    createAnswerToFirebase(graphID, questionID, loggedInUser.uid , {
-      content: 'hi',
-    })
-    .then(() => {
-      message.success('Answer created!')
-    })
-  }
-
+function QuestionList({loggedInUser, questionList, setQuestionList, graphID, noteID} : Iprops) : JSX.Element {
   const handleGetAnswer = async (questionID) => {
-    return await getAnswerFromFirebase(graphID, questionID, loggedInUser.uid)
+    return getAnswerFromFirebase(graphID, questionID, loggedInUser.uid)
   }
 
   const handleUpdateAnswer = async (questionID, content) => {
-    updateAnswerToFirebase(graphID, questionID, loggedInUser.uid, content)
+    await updateAnswerToFirebase(graphID, questionID, loggedInUser.uid, content)
+  }
+
+  const handleDeleteQuestion = async (questionID) => {
+    setQuestionList(questionList.filter((question) => question.questionID !== questionID))
+    await deleteQuestionFromFirebase(graphID, questionID)
   }
 
   return (
@@ -45,8 +41,8 @@ function QuestionList({loggedInUser, questionList, graphID, noteID} : Iprops) : 
                     key={index}
                     question={question}
                     handleGetAnswer={handleGetAnswer}
-                    handleCreateAnswer={handleCreateAnswer}
                     handleUpdateAnswer={handleUpdateAnswer}
+                    handleDeleteQuestion={handleDeleteQuestion}
                   />
                 </Col>
             )

@@ -68,9 +68,9 @@ function App() {
 		<>
 			<Editor noteFirebase={noteFirebase} loading={loading} updateNote={(content) => updateNote(graphID,noteID, content)} />
 			{/* //QuestionModal */}
-			<QuestionsModal graphID={`${graphID}`} noteID={`${noteID}`} loggedInUser={loggedInUser}/>
+			<QuestionsModal graphID={`${graphID}`} noteID={`${noteID}`} loggedInUser={loggedInUser} questionList={questionList} setQuestionList={setQuestionList}/>
 			{
-				questionList && <QuestionList loggedInUser={loggedInUser} graphID={`${graphID}`} noteID={`${noteID}`} questionList={questionList}/>
+				questionList && <QuestionList questionList={questionList} setQuestionList={setQuestionList} loggedInUser={loggedInUser} graphID={`${graphID}`} noteID={`${noteID}`}/>
 			}
 		</>
 	);

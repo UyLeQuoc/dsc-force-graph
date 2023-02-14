@@ -1,42 +1,49 @@
 import { Button, Card, message, Typography } from 'antd'
+import Image from 'next/image';
 import {useEffect, useState} from 'react'
+import { getAnswerFromFirebase } from '../../utils/firebase';
 import Editor from '../Editor';
 
 type IProps = {
   question: any;
   key: number;
   handleGetAnswer: (questionID: string) => Promise<any>;
-  handleCreateAnswer: (questionID: string) => void;
   handleUpdateAnswer: (questionID: string, content: string) => void;
+  handleDeleteQuestion: (questionID: string) => void;
 }
-function Question({question, handleGetAnswer, handleCreateAnswer, handleUpdateAnswer} : IProps) {
+function Question({question, handleGetAnswer,  handleUpdateAnswer, handleDeleteQuestion} : IProps) {
   const [answer, setAnswer] = useState<any>(null)
   const [isLoading, setIsLoading] = useState<boolean>(true)
 
   useEffect(() => {
-      handleGetAnswer(question.questionID)
+    handleGetAnswer(question.questionID)
       .then((answer) => {
-        if(!answer) {
-          message.error('No answer found')
-        }
         setAnswer(answer)
         setIsLoading(false)
-        console.log('answer', answer)
       })
       
   
     return () => {
-      setAnswer("")
       setIsLoading(true)
     }
   }, [question.questionID])
   
 
   return (
-    <Card size="small" title={`Asked by: ${question.owner}`} extra={<a href="#">More</a>}>
-      <Typography.Title level={4}>Question: {question.question}</Typography.Title>
-      <Typography.Paragraph>questionID: {question.questionID}</Typography.Paragraph>
-      <Button type="primary" onClick={() => handleCreateAnswer(question.questionID)}>Create Note To Answer</Button>
+    <Card 
+      title={`Question: ${question.question}`} 
+      extra={
+        <>
+          <Button type='primary' danger onClick={() => handleDeleteQuestion(question.questionID)}>Delete</Button>
+        </>
+    }>
+      {
+        question.images && question.images.map((image, index) => {
+          return (
+            <Image key={index} src={image} alt="Question Image" width={300} height={300}/>
+          )
+        })
+      }
       {
         answer &&  <Editor noteFirebase={answer} loading={false} updateNote={(content) => handleUpdateAnswer(question.questionID, content)} />
       }

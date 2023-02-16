@@ -11,6 +11,7 @@ import { useRouter } from 'next/router';
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [loggedInUser, loading, error] = useAuthState(auth);
+  console.log("LOGGED IN USER", loggedInUser);
 
   useEffect(() => {
     const setUserInFirebase = async () => {

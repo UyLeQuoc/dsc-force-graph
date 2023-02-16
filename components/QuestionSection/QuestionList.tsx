@@ -1,43 +1,35 @@
 import { Col, Row } from 'antd';
 import { IQuestion } from '../../interfaces';
-import { deleteQuestionFromFirebase, getAnswerFromFirebase, updateAnswerToFirebase } from '../../utils/firebase';
 import Question from './Question';
 
 type Iprops = {
-  graphID: string;
   noteID: string;
   loggedInUser: any;
-  questionList: IQuestion[];
-  setQuestionList: (questionList: IQuestion[]) => void;
+  questionList: any;
+  setQuestionList: (questionList: any) => void;
   answerList: any;
   setAnswerList: (answerList: any) => void;
 }
 
-function QuestionList({loggedInUser, questionList, setQuestionList, graphID, noteID, answerList, setAnswerList} : Iprops) : JSX.Element {
-
-  const handleUpdateAnswer = async (answerID, output) => {
-    await updateAnswerToFirebase(answerID, output)
-  }
-
+function QuestionList({loggedInUser, questionList, setQuestionList,  noteID, answerList, setAnswerList} : Iprops) : JSX.Element {
+  if(!answerList) return <></>
   return (
-      <div className='my-10'>
-        <Row>
-        {
-          questionList.map((question, index) => {
-            return (
-                <Col span={16} offset={4} className="my-2">
-                  <Question
-                    key={index}
-                    question={question}
-                    handleUpdateAnswer={handleUpdateAnswer}
-                    answerList={answerList}
-                  />
-                </Col>
-            )
-        })
-      }
-      </Row>
-      </div>
+        <>
+          {
+              questionList.map((question, index) => {
+                return (
+                    <Col span={20} offset={2} className="my-2">
+                      <Question
+                        key={index}
+                        question={question}
+                        answer={answerList.get(question.id)}
+                        loggedInUser={loggedInUser}
+                      />
+                    </Col>
+                )
+            })
+          }
+        </>
   )
 }
 

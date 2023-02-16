@@ -89,7 +89,10 @@
 .ProseMirror ul[data-type="taskList"] li > div {
   flex: 1 1 auto;
 }
-
+.ProseMirror div[data-youtube-video]{
+  display: flex;
+  justify-content: center;
+}
 .node-label {
   font-size: 12px;
   padding: 1px 4px;

@@ -80,7 +80,7 @@ export default function BasicNodeChart({loggedInUser, graphID} : any) : JSX.Elem
 		const dataToUpdate = { ...graphData };
 		dataToUpdate.nodes = updateNode;
 		dataToUpdate.links = updateLinks;
-		message.success('Removed node: ' + node.id + ' sucessfully');
+		message.success('Removed node: ' + node.name + ' sucessfully');
 		setGraphData(dataToUpdate);
 	}
 
@@ -271,7 +271,6 @@ export default function BasicNodeChart({loggedInUser, graphID} : any) : JSX.Elem
 	};
 
 	useEffect( () => {
-			// getUserFromFirebase();
 			getGraphInfoFromFirebase();
 			
 			// bloom effect
@@ -351,6 +350,7 @@ export default function BasicNodeChart({loggedInUser, graphID} : any) : JSX.Elem
 						drawer={{
 							open, onClose, confirm
 						}}
+						updateGraph={updateGraph}
 						loggedInUser={loggedInUser}
 					/>
 				)

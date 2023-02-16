@@ -2,7 +2,7 @@ import { Button, Col, Drawer, Empty, message, Modal, Popconfirm, Row, Skeleton, 
 import { doc, getDoc } from 'firebase/firestore';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { db, getQuestionFromFirebase } from '../utils/firebase';
+import { createNote, db, getNoteFromFirebase, getQuestionFromFirebase } from '../utils/firebase';
 import Editor from './Editor';
 
 type IProps = {
@@ -15,36 +15,25 @@ type IProps = {
 		confirm: (e: React.MouseEvent<HTMLElement>) => void;
 	}
 	loggedInUser: any;
+	updateGraph: () => void;
 }
-function ShowNote({graphInfoFirebase, modalNode, isViewer, drawer, loggedInUser} : IProps) {
+function ShowNote({graphInfoFirebase, modalNode, isViewer, drawer, loggedInUser, updateGraph} : IProps) {
 	const { open, onClose, confirm } = drawer;
 
 	// firebase
 	const [noteFirebase,setNoteFirebase] = useState<any>();
 	const [loading,setLoading] = useState<boolean>(true);
 	const [isEmpty, setIsEmpty] = useState<boolean>(false);
-	
-
-	const getNoteFromFirebase = async (graphID, noteID) => {
-		if(!graphID || !noteID) return;
-		console.log("render ShowNote", graphID, noteID)
-		const noteRef = doc(db, 'graphs', `${graphID}`, 'notes' ,`${noteID}`);
-		const noteSnap = await getDoc(noteRef);
-		if (noteSnap.exists()) {
-			setNoteFirebase(noteSnap.data())
-		} else {
-			// doc.data() will be undefined in this case
-			setIsEmpty(true);
-      message.error('No such document!');
-		}
- 	};
  
 	useEffect( () => {
-			getNoteFromFirebase(graphInfoFirebase.id, modalNode.id);
-			// reset loading
-			setTimeout(() => {
+			getNoteFromFirebase(modalNode.id)
+			.then((res) => {
+				setNoteFirebase(res)
+				if(!res) {
+					setIsEmpty(true);
+				}
 				setLoading(false);
-			},2000)
+			})
 			return () => {
 				setLoading(true);
 				setNoteFirebase(undefined);
@@ -52,7 +41,14 @@ function ShowNote({graphInfoFirebase, modalNode, isViewer, drawer, loggedInUser}
 			}
 	},[modalNode.id]);
 
-
+	const handleCreateNote = async () => {
+		createNote(modalNode.id,loggedInUser)
+		.then((res) => {
+			setNoteFirebase(res)
+			setIsEmpty(false)
+			updateGraph();
+		})
+	}
   return (
 			<>
 
@@ -77,7 +73,7 @@ function ShowNote({graphInfoFirebase, modalNode, isViewer, drawer, loggedInUser}
 								</Popconfirm>
 								<Button type="primary">
 									<Link
-										href={`/${graphInfoFirebase.id}/${modalNode.id}`} 
+										href={`/note/${modalNode.id}`} 
 										rel="noopener noreferrer" 
 										target="_blank"
 										style={{color: 'white'}}
@@ -94,6 +90,11 @@ function ShowNote({graphInfoFirebase, modalNode, isViewer, drawer, loggedInUser}
 								<Row align="middle" style={{height: '100%'}}>
 									<Col span={24}>
 										<Empty description="No Note Found" />
+										{
+											!isViewer && (
+												<Button type="primary" onClick={handleCreateNote}>Create Note</Button>
+											)
+										}
 									</Col>
 								</Row>
 							) : (

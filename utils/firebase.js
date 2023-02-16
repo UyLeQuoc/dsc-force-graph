@@ -31,6 +31,7 @@ const storage = getStorage(app);
 
 const auth = getAuth(app);
 
+
 export const getQuestionFromFirebase = async (noteID) => {
   if(!noteID) return;
 
@@ -58,17 +59,8 @@ const deleteDocuments = async (collectionRef) => {
   });
 };
 
-export const createAnswerToFirebase = async (graphID, questionID, userID, output) => {
-  const noteRef = doc(db, 'graphs', `${graphID}`, questionID, userID);
-  const data = {
-    ...output,
-    timestamp: serverTimestamp(),
-  }
-  await setDoc(noteRef, data);
-}
-
-export const updateNote = async (graphID, noteID, content) => {
-  const noteRef = doc(db, 'graphs', `${graphID}`, 'notes' ,`${noteID}`);
+export const updateNote = async (noteID, content) => {
+  const noteRef = doc(db, 'Notes' ,`${noteID}`);
   const data = {
     content: content,
     timestamp: serverTimestamp()
@@ -76,49 +68,71 @@ export const updateNote = async (graphID, noteID, content) => {
   await updateDoc(noteRef, data);
 }
 
-export const updateAnswerToFirebase = async (answerID, output) => {
-  const noteRef = doc(db, 'Answers', answerID);
-  await updateDoc(noteRef, output);
+export const updateAnswer = async (answerID, content) => {
+  const noteRef = doc(db, 'Answers' ,`${answerID}`);
+  const data = {
+    content: content,
+    lastupdate: serverTimestamp()
+  }
+  await updateDoc(noteRef, data);
 }
-
-
-// export const getAnswerFromFirebase = async (graphID, questionID, userID) => {
-//     const noteRef = doc(db, 'Answer', `${graphID}`, questionID, userID);
-
-//     const noteSnap = await getDoc(noteRef);
-//     if (noteSnap.exists()) {
-//       console.log("getAnswerFromFirebase", noteSnap.data())
-//       return noteSnap.data();
-//     } else {
-//       await createAnswerToFirebase(graphID, questionID, userID, {content: "Start typing your answer here!"})
-//       .then(() => {
-//         return {content: "Start typing your answer here!"}
-//       })
-//       return {content: "Start typing your answer here!"}
-//   }
-// };
 
 export const getAnswerFromFirebase = async (loggedInUser) => {
   const queryQuestion = query(collection(db, 'Answers'), where("createdby", "==", loggedInUser.email));
-  const output = [];
+  const output = new Map();
   const querySnapshot = await getDocs(queryQuestion);
+  const map = new Map();
   querySnapshot.forEach((doc) => {
     // doc.data() is never undefined for query doc snapshots
-    output.push(doc.data());
+    output.set(doc.data().questionID, doc.data());
   });
   return output;
 };
 
-export const getNoteFromFirebase = async (graphID, noteID) => {
-  const noteRef = doc(db, 'graphs', `${graphID}`, 'notes' ,`${noteID}`);
+// Create Note In Firebase
+export const createNote = async (noteID, loggedInUser) => {
+  const noteRef = doc(db, 'Notes' ,`${noteID}`);
+  const data = {
+    owner: loggedInUser.uid,
+    content: '<h1>Start typing...</h1>',
+    timestamp: serverTimestamp(),
+  }
+  await setDoc(noteRef, data);
+  return data;
+}
+export const createAnswer = async (questionID, email) => {
+  const id = uuidv4();
+  const noteRef = doc(db, 'Answers' ,`${id}`);
+  const data = {
+    id: id,
+    questionID: questionID,
+    createdby: email,
+    content: '<h1>Type the answer...</h1>',
+    createdate: serverTimestamp(),
+  }
+  await setDoc(noteRef, data);
+  return data;
+}
+
+export const getNoteFromFirebase = async (noteID) => {
+  const noteRef = doc(db, 'Notes' ,`${noteID}`);
   const noteSnap = await getDoc(noteRef);
   if (noteSnap.exists()) {
     return noteSnap.data();
   } else {
+    console.log("No such document!")
     // doc.data() will be undefined in this case
     return null;
-    
   }
  };
 
+ export const getUserFromFirebase = async (loggedInUser) => {
+  const noteRef = doc(db, 'users' ,`${loggedInUser.uid}`);
+  const noteSnap = await getDoc(noteRef);
+  if (noteSnap.exists()) {
+    return noteSnap.data();
+  } else {
+    return null;
+  }
+ };
 export { db, auth, storage };

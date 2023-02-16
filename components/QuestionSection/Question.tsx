@@ -1,36 +1,53 @@
 import { Button, Card, message, Typography, Image } from 'antd'
 import {useEffect, useState} from 'react'
-import { getAnswerFromFirebase } from '../../utils/firebase';
+import { createAnswer, getAnswerFromFirebase, updateAnswer } from '../../utils/firebase';
 import Editor from '../Editor';
 
 type IProps = {
   question: any;
   key: number;
-  handleUpdateAnswer: (answerID: string, output: any) => Promise<void>;
-  answerList: any;
+  answer: any;
+  loggedInUser: any;
 }
-function Question({question,   handleUpdateAnswer, answerList} : IProps) {
-  const [answer, setAnswer] = useState<any>(null)
-  const [isLoading, setIsLoading] = useState<boolean>(true)
-  console.log("22", answerList)
-  const answerFilter = answerList.find((answer) => answer.questionID === question.questionID);
+function Question({question, answer, loggedInUser} : IProps) {
+  console.log('answer', answer)
+  const [answerUI, setAnswerUI] = useState<any>(undefined);
+
+  const handleCreateAnswer = async () => {
+    createAnswer(question.id, loggedInUser.email)
+    .then((res) => {
+      setAnswerUI(res);
+    })
+  }
+  useEffect( () => {
+    setAnswerUI(answer);
+    return () => {
+      setAnswerUI(undefined);
+    }
+},[]);
 
   return (
-    <Card 
-      title={`Question: ${question.name} - ${question.questionID}`} 
-    >
+    <>
       <div className='flex justify-center align-middle'>
         {question.picture != null && (
-          <Image
-            src={question.picture.src} alt={question.picture.title}
-            width = {'50%'}
-            />
+          <>
+            <h3>{`Question: ${question.name}`}</h3>
+            <Image
+              src={question.picture.src} alt={question.picture.title}
+              width = "200px"
+              height = "200px"
+              />
+          </>
         )}
       </div>
       {
-        answer &&  <Editor noteFirebase={answerFilter?.content} loading={false} updateNote={(content) => handleUpdateAnswer(question.id, content)} />
+        answerUI ? (
+          <Editor noteFirebase={answerUI} loading={false} updateNote={(content) => updateAnswer(answerUI.id, content)} />
+        ) : (
+          <Button type='primary' onClick={handleCreateAnswer}>Create Answer</Button>
+        )
       }
-    </Card>
+    </>
   )
 }
 

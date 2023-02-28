@@ -163,4 +163,17 @@ export const getNoteFromFirebase = async (noteID) => {
   });
   return uploadTask;
 }
+
+
+export async function getRole(user){
+  const userDoc = await getDoc(doc(db, 'role', `${user?.uid}`));
+  console.log(userDoc.data());
+  if(!userDoc.exists()){
+    await setDoc(doc(db, 'role', `${user?.uid}`), {role: 'user'});
+    return 'user';
+  }
+  return userDoc.data().role;
+}
+
+
 export { db, auth, storage };

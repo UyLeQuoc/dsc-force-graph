@@ -29,3 +29,5 @@ export type IQuestion = {
 	lastModified: any;
 	questionID: string;
 }
+
+export type IRole = 'admin' | 'member' | 'user';

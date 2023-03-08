@@ -16,7 +16,7 @@ function MainHeader({show} : {show: boolean}) : JSX.Element {
   const router = useRouter();
 
   return (
-    <div className={`fixed bg-white top-0 left-0 right-0 z-50 px-10 h-[64px]  main-header ${show ? 'main-header-show' : 'main-header-unshow'}`}>
+    <div className={`fixed bg-white top-0 left-0 right-0 z-50 px-10 h-[64px] border-b-[1px] main-header ${show ? 'translate-x-0 translate-y-0' : 'translate-y-[-100%]'}`}>
       <Row align="middle" justify="space-between" className='leading-[64px]'>
         <Col flex="120px">
           <Link href='/' className='logo flex items-center'>

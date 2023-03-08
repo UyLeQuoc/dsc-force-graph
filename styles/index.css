@@ -107,13 +107,6 @@
 
 .main-header{
   transition: transform 0.3s;
-  border: #0d0d0d 1px solid;
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 
-}
-.main-header-show{
-  transform: none;
-}
-.main-header-unshow{
-  transform: translate(0, -100%);
 }

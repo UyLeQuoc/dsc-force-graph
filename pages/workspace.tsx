@@ -5,6 +5,8 @@ import { useEffect, useState } from 'react'
 import { IGraphInfo } from "../interfaces";
 import { Button, Input, message, Modal, Space, Typography } from "antd";
 import { v4 as uuidv4 } from 'uuid';
+import MainFooter from "../components/common/MainFooter";
+import MainHeader from "../components/common/MainHeader";
 
 function Workspace() : JSX.Element {
   const [loggedInUser, _loading, _error] = useAuthState(auth);
@@ -94,7 +96,8 @@ const handleCancel = () => {
 
   return (
     <>
-      <div>Workspace</div>
+      <MainHeader show={true}/>
+      <div className="mt-[64px]">Workspace</div>
       <div>
         <Button type="primary" onClick={showModal}>Create new graph</Button>
       </div>
@@ -114,6 +117,7 @@ const handleCancel = () => {
         <Typography.Text>Create a new graph name:</Typography.Text>
         <Input placeholder="New Graph Name" value={graphTitle} onChange={(e) => setGraphTitle(e.target.value)}/>
       </Modal>
+      <MainFooter />
     </>
   )
 }

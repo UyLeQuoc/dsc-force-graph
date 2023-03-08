@@ -3,11 +3,12 @@ import { AppProps } from 'next/app';
 import { useEffect } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import Loading from '../components/Loading';
-import LoginPage from '../components/LoginPage';
 import { auth, db } from '../utils/firebase';
 
-import '../styles/index.css';
 import { useRouter } from 'next/router';
+import { AuthProvider } from '../auth/AuthProvider';
+import '../styles/index.css';
+import Login from './login';
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [loggedInUser, loading, error] = useAuthState(auth);
@@ -32,21 +33,6 @@ function MyApp({ Component, pageProps }: AppProps) {
     if (loggedInUser){
       setUserInFirebase();
     }
-    // Check the conversation already exist in Firebase
-    // const queryGetConversationsForCurrentUser = query(collection(db,'conversations'), where('users', 'array-contains', loggedInUser.email))
-    // const [conversationsSnapshot] = useCollection(queryGetConversationsForCurrentUser)
-    // const isConversationAlreadyExisted = (recipientEmail) => {
-    //     return conversationsSnapshot?.docs.find(conversation => (conversation.data().users.includes(recipientEmail)))
-    // }
-    // const createConversation = async () => {
-    //   if (!isConversationAlreadyExisted("uylqse172445@fpt.edu.vn")){
-    //     // Add conversation to Firebase ("conversation collection")
-    //     await addDoc(collection(db, 'conversations'), {
-    //       users: [loggedInUser?.email, "uylqse172445@fpt.edu.vn"]
-    //     })
-    //   }
-    // };
-    // createConversation();
   }
   , [loggedInUser])
 
@@ -56,10 +42,12 @@ function MyApp({ Component, pageProps }: AppProps) {
   if (loading) return <Loading />
 
     if(cleanPath.slice(1,5) !== 'view') {
-      if (!loggedInUser) return <LoginPage />
+      if (!loggedInUser) return <Login />
     }
   
-  return <Component {...pageProps} />
+  return <AuthProvider>
+      <Component {...pageProps} />
+    </AuthProvider>
 }
 
 export default MyApp;

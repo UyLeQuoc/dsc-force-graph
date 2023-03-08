@@ -6,6 +6,8 @@ import { useSignInWithGoogle } from "react-firebase-hooks/auth";
 import Logo from "../public/logo/DSC_LOGO.png";
 import graphPreviewImage from "../public/logo/login-graph-preview.png";
 import { auth } from "../utils/firebase";
+import MainFooter from './common/MainFooter';
+import MainHeader from './common/MainHeader';
 
 const { Header, Footer, Content } = Layout;
 
@@ -44,10 +46,6 @@ export default function LoginPage() {
   return (
     <>
       <Layout>
-        <Header style={headerStyle}>
-          {/* <Image src={Logo} alt="DSC logo" /> */}
-          Header
-        </Header>
         <Content style={contentStyle}>
           <Row justify="center" align="middle" gutter={[50,50]}>
             <Col span={10}>
@@ -90,7 +88,6 @@ export default function LoginPage() {
             </Col>
           </Row>
         </Content>
-        <Footer style={footerStyle}>Footer</Footer>
       </Layout>
     </>
     

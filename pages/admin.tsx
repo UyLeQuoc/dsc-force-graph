@@ -15,7 +15,7 @@ function admin() {
       {
         authProvider.role === 'admin' ? (
           <>
-            <MainHeader />
+            <MainHeader show={true}/>
             <AdminComponent />
             <MainFooter />
           </>
